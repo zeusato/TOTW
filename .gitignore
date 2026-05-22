@@ -1,0 +1,8 @@
+# Large / legacy files
+tale-of-the-winds.html
+Tale of the winds.docx
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tale of the Winds - Khởi Phong</title>
+    <meta name="description" content="Trải nghiệm đọc tiểu thuyết sử thi ma thuật tương tác Tale of the Winds (Quyển I: Khởi Phong). Khám phá thế giới Nemarian huyền ảo.">
+    <meta name="author" content="Mạnh Quyết">
+    
+    <!-- Premium Google Fonts: EB Garamond (headings), Lora (reading body), Inter (UI) -->
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Load novel content data -->
+    <script src="chapters.js"></script>
+</head>
+<body class="theme-forest">
+
+    <!-- Ambient Magic Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- LANDING SCREEN (SPLASH) -->
+    <section id="landing-screen">
+        <div class="landing-wrapper">
+            <!-- Left Side: Gothic Arch Cover Card -->
+            <div class="landing-cover-side">
+                <div class="gothic-arch" onclick="enterWorld()">
+                    <div class="arch-inner">
+                        <img src="Assets/cover_scene.png" class="arch-img" alt="Bìa sử thi Tale of the Winds">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Side: Title & Info -->
+            <div class="landing-info-side">
+                <h1 class="landing-title">Tale of the winds</h1>
+                <h2 class="landing-subtitle">Where the wind begins</h2>
+                <div class="landing-divider"></div>
+                <div class="landing-metadata">
+                    <p>Quyển I: Khởi Phong — "initium venti"</p>
+                    <p class="landing-author">Tác giả: <span>Mạnh Quyết</span></p>
+                </div>
+                <div class="landing-poem">
+                    <p>Gió trỗi dậy từ ngàn năm say ngủ,</p>
+                    <p>Thổi qua rừng Akine ngút ngàn xanh.</p>
+                    <p>Ngọn lửa thiêng bùng lên nơi vách đá,</p>
+                    <p>Sứ mệnh anh hùng chép giữa sử xanh.</p>
+                </div>
+                <div class="enter-btn-wrapper">
+                    <button class="enter-btn" onclick="enterWorld()" id="enter-btn-id">Bước Vào Thế Giới</button>
+                    <div class="enter-btn-pulse"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN WORKSPACE -->
+    <main id="main-workspace">
+        
+        <!-- Left Column: Reader Area -->
+        <section class="reader-column" id="reader-column">
+            
+            <!-- Sticky Control Bar -->
+            <header class="control-bar">
+                <div class="branding" onclick="location.reload()">
+                    Tale of <span>the winds</span>
+                </div>
+                <div class="controls-group">
+                    <!-- Table of Contents -->
+                    <div class="toc-container">
+                        <button class="control-btn" id="toc-btn">
+                            <span>📖</span><span class="btn-text"> Mục lục</span>
+                        </button>
+                        <div class="toc-dropdown" id="toc-dropdown">
+                            <div class="toc-title">Mục lục sử thi</div>
+                            <div class="toc-list" id="toc-list">
+                                <!-- Filled dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bookmark -->
+                    <button class="control-btn" id="bookmark-btn" onclick="saveBookmark()">
+                        <span>🔖</span><span class="btn-text"> Đánh dấu</span>
+                    </button>
+
+                    <!-- Background Music -->
+                    <button class="control-btn" id="sound-btn" onclick="toggleSound()">
+                        <span id="sound-icon">🔇</span>
+                        <div class="audio-wave" id="sound-wave">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                        <span class="btn-text" id="sound-text">Âm thanh: TẮT</span>
+                    </button>
+
+                    <!-- Config Settings -->
+                    <button class="control-btn" id="settings-btn" onclick="toggleSettingsDropdown(event)">
+                        <span>⚙️</span><span class="btn-text"> Cài đặt</span>
+                    </button>
+                </div>
+
+                <!-- Settings Dropdown -->
+                <div class="settings-dropdown" id="settings-dropdown">
+                    <div class="settings-title">Cấu hình đọc truyện</div>
+                    
+                    <!-- Theme Selector -->
+                    <div class="settings-option">
+                        <span class="settings-label">Chủ đề (Theme)</span>
+                        <div class="theme-grid">
+                            <div class="theme-swatch active" style="background: #10b981;" onclick="setTheme('forest', this)" title="Lục Bảo Akine"></div>
+                            <div class="theme-swatch" style="background: #ef4444;" onclick="setTheme('crimson', this)" title="Hỏa Morgard"></div>
+                            <div class="theme-swatch" style="background: #a855f7;" onclick="setTheme('mana', this)" title="Ma Pháp Aria"></div>
+                            <div class="theme-swatch" style="background: #6366f1;" onclick="setTheme('void', this)" title="Hư Không Sieth"></div>
+                            <div class="theme-swatch" style="background: #fbbf24;" onclick="setTheme('divine', this)" title="Thần Quang"></div>
+                            <div class="theme-swatch" style="background: #d97706;" onclick="setTheme('earth', this)" title="Thương Cảng York"></div>
+                        </div>
+                    </div>
+
+                    <!-- Font Size Adjuster -->
+                    <div class="settings-option">
+                        <span class="settings-label">Kích thước chữ</span>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="control-btn" style="flex: 1; padding: 0.35rem 0;" onclick="changeFontSize(-1)">A-</button>
+                            <button class="control-btn" style="flex: 1; padding: 0.35rem 0;" onclick="changeFontSize(1)">A+</button>
+                        </div>
+                    </div>
+
+                    <!-- TTS Speech Reader -->
+                    <div class="settings-option">
+                        <span class="settings-label">Giọng đọc Việt (TTS)</span>
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <button class="control-btn" style="flex: 1; padding: 0.35rem 0;" id="tts-btn" onclick="toggleTTS()">Đọc truyện</button>
+                            <button class="control-btn" style="flex: 1; padding: 0.35rem 0;" onclick="stopTTS()">Dừng</button>
+                        </div>
+                        <select id="tts-voice-select" class="control-select">
+                            <option value="">-- Đang quét giọng đọc... --</option>
+                        </select>
+                        <div id="speech-indicator">
+                            🔊 Đang phát giọng đọc nhân tạo...
+                        </div>
+                    </div>
+
+                    <!-- Autoscroll -->
+                    <div class="settings-option">
+                        <span class="settings-label">Tự động cuộn</span>
+                        <button class="control-btn" id="autoscroll-btn" onclick="toggleAutoScroll()">BẬT</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Book Chapters Content Area -->
+            <div class="reading-container" id="chapters-reading-container">
+                <!-- Chapters injected by JS -->
+            </div>
+
+            <!-- Chapter Navigation Footer -->
+            <footer class="nav-footer">
+                <button class="nav-btn" onclick="changeChapter(-1)" id="prev-ch-btn">← Chương trước</button>
+                <div id="current-chapter-indicator">
+                    Chương 1 / 20
+                </div>
+                <button class="nav-btn" onclick="changeChapter(1)" id="next-ch-btn">Chương sau →</button>
+            </footer>
+
+        </section>
+
+        <!-- Right Column: Interactive Widgets -->
+        <section class="interaction-column">
+            
+            <!-- Map Card Card -->
+            <div class="map-section">
+                <h3 class="map-title">
+                    📍 Bản đồ Nemarian
+                </h3>
+                <div class="map-container" onclick="openMapModal()">
+                    <img src="Assets/Map.png" class="map-image" alt="Bản đồ Nemarian">
+                </div>
+            </div>
+
+            <!-- Dynamic Interaction Widgets -->
+            <div class="widget-section">
+
+                <!-- Chronicles Lore Scroll Card -->
+                <div class="widget-card active" id="widget-lore-card">
+                    <div class="widget-header">
+                        <span id="crystal-title">📜 Bí Thư Nemarian</span>
+                        <span id="lore-region">Bí thư 1 / 20</span>
+                    </div>
+
+                    <div class="lore-scroll-container">
+                        <h4 class="fact-title-text" id="fact-title-text" style="font-family: var(--font-display); font-size: 1.05rem; color: var(--theme-accent); margin-bottom: 0.5rem; text-transform: uppercase;">Lục địa Nemarian</h4>
+                        <p class="lore-text" id="lore-text-content">
+                            Đang tải cổ thư sử thi...
+                        </p>
+                    </div>
+                    
+                    <div class="fact-nav-container" style="display: flex; justify-content: flex-end; margin-top: 0.8rem;">
+                        <button class="control-btn" id="next-fact-btn" onclick="nextFact()" style="padding: 0.35rem 0.85rem; font-size: 0.75rem;">
+                            Tiếp theo ➔
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- MAP DETAIL MODAL -->
+    <div class="map-modal" id="map-modal" onclick="handleMapModalBackgroundClick(event)">
+        <header class="map-modal-header">
+            <div class="map-modal-title">
+                <span>🗺️</span> Bản đồ chi tiết Nemarian
+            </div>
+            <div class="map-modal-controls">
+                <button class="map-modal-btn" onclick="resetMapModalTransform()">🔄 Reset</button>
+                <button class="map-modal-btn close-btn" onclick="closeMapModal()">❌ Đóng</button>
+            </div>
+        </header>
+
+        <div class="map-modal-viewport" id="map-modal-viewport" 
+             onmousedown="startMapPan(event)"
+             onmousemove="doMapPan(event)"
+             onmouseup="endMapPan(event)"
+             onmouseleave="endMapPan(event)"
+             ontouchstart="startMapTouch(event)"
+             ontouchmove="doMapTouch(event)"
+             ontouchend="endMapTouch(event)">
+            <!-- Load detailed high-res Map.png here -->
+            <img src="Assets/Map.png" id="map-modal-img" alt="Chi tiết Bản đồ Nemarian" draggable="false">
+        </div>
+
+        <footer class="map-modal-footer">
+            <span class="instruction-tip">💡 Sử dụng <b>cuộn chuột</b> hoặc <b>bấm giữ & kéo</b> để di chuyển bản đồ. Sử dụng <b>hai ngón tay phóng to/thu nhỏ</b> trên điện thoại.</span>
+        </footer>
+    </div>
+
+    <!-- Toast Alerts -->
+    <div class="toast" id="toast">
+        <span id="toast-icon">🔖</span> <span id="toast-text">Đã ghi nhớ ấn ký chương đọc dở dang!</span>
+    </div>
+
+    <!-- Floating Glassmorphic TTS Player -->
+    <div class="tts-player-toast" id="tts-player-toast">
+        <div class="tts-player-icon">🔊</div>
+        <div class="tts-player-info">
+            <div class="tts-player-title" id="tts-player-title">Đang đọc sử thi...</div>
+            <div class="tts-player-subtitle" id="tts-player-subtitle">Đoạn 1 / 10</div>
+        </div>
+        <div class="tts-player-controls">
+            <button class="tts-player-btn speed-btn" id="tts-player-speed" onclick="cycleTtsSpeed()" title="Thay đổi tốc độ đọc">1.15x</button>
+            <button class="tts-player-btn" id="tts-player-play-pause" onclick="toggleTTS()" title="Tạm dừng / Tiếp tục">⏸️</button>
+            <button class="tts-player-btn close-btn" onclick="stopTTS()" title="Dừng đọc">⏹️</button>
+        </div>
+    </div>
+
+    <!-- Floating Map Button for Mobile -->
+    <button class="mobile-map-shortcut" id="mobile-map-shortcut" onclick="openMapModal()" title="Mở bản đồ Nemarian">
+        🗺️
+    </button>
+
+    <!-- Main Logic Script -->
+    <script src="app.js"></script>
+</body>
+</html>
