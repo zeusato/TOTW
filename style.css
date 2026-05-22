@@ -278,6 +278,7 @@ body {
 
 .enter-btn-wrapper {
     position: relative;
+    display: inline-block;
 }
 
 .enter-btn {
