@@ -96,6 +96,11 @@ body {
     user-select: none;           /* Standard */
 }
 
+body.landing-active {
+    overflow: hidden !important;
+    height: 100vh !important;
+}
+
 /* Premium Scrollbars styling */
 ::-webkit-scrollbar {
     width: 6px;
@@ -278,7 +283,11 @@ body {
 
 .enter-btn-wrapper {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    margin: 0 auto;
 }
 
 .enter-btn {
@@ -307,9 +316,8 @@ body {
 
 .enter-btn-pulse {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     border-radius: 9999px;
@@ -318,15 +326,16 @@ body {
     animation: button-ripple 2s infinite ease-out;
     pointer-events: none;
     z-index: 1;
+    box-sizing: border-box;
 }
 
 @keyframes button-ripple {
     0% {
-        transform: translate(-50%, -50%) scale(1);
+        transform: scale(1);
         opacity: 0.8;
     }
     100% {
-        transform: translate(-50%, -50%) scale(1.25);
+        transform: scale(1.22);
         opacity: 0;
     }
 }

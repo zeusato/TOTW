@@ -178,13 +178,14 @@ const REGION_NAMES = {
 // Enter World from Splash
 function enterWorld() {
     const landing = document.getElementById('landing-screen');
-    landing.classList.add('fade-out');
+    if (landing) landing.classList.add('fade-out');
+    document.body.classList.remove('landing-active');
     
     // Attempt BGM init
     initBgm();
     
     setTimeout(() => {
-        landing.style.display = 'none';
+        if (landing) landing.style.display = 'none';
         
         // Show bookmark load popup if saved in localstorage
         checkSavedBookmark();
