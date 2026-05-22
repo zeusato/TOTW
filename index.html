@@ -103,7 +103,12 @@
                         <div class="audio-wave" id="sound-wave">
                             <span></span><span></span><span></span><span></span><span></span>
                         </div>
-                        <span class="btn-text" id="sound-text">Âm thanh: TẮT</span>
+                        <span class="btn-text" id="sound-text">Nhạc nền: TẮT</span>
+                    </button>
+
+                    <!-- Hướng dẫn sử dụng -->
+                    <button class="control-btn" id="guide-btn" onclick="openGuideModal()">
+                        <span>❓</span><span class="btn-text"> Hướng dẫn</span>
                     </button>
 
                     <!-- Config Settings -->
@@ -245,6 +250,76 @@
         <footer class="map-modal-footer">
             <span class="instruction-tip">💡 Sử dụng <b>cuộn chuột</b> hoặc <b>bấm giữ & kéo</b> để di chuyển bản đồ. Sử dụng <b>hai ngón tay phóng to/thu nhỏ</b> trên điện thoại.</span>
         </footer>
+    </div>
+
+    <!-- USER GUIDE / INSTRUCTION MODAL -->
+    <div class="guide-modal" id="guide-modal" onclick="handleGuideModalBackgroundClick(event)">
+        <div class="guide-modal-content" onclick="event.stopPropagation()">
+            <header class="guide-modal-header">
+                <div class="guide-modal-title">
+                    <span>📖</span> Hướng dẫn trải nghiệm sử thi
+                </div>
+                <button class="map-modal-btn close-btn" onclick="closeGuideModal()">❌ Đóng</button>
+            </header>
+            
+            <div class="guide-modal-body">
+                <div class="guide-intro">
+                    Chào mừng bạn đến với <strong>Tale of the Winds</strong> - Sử thi ma thuật tương tác cao cấp. Hãy cùng khám phá các tính năng ưu việt giúp hành trình đọc truyện của bạn trở nên trọn vẹn hơn:
+                </div>
+                
+                <div class="guide-grid">
+                    <!-- Feature 1: BGM -->
+                    <div class="guide-card">
+                        <div class="guide-card-icon">🎵</div>
+                        <div class="guide-card-title">Nhạc Nền Ma Pháp</div>
+                        <div class="guide-card-desc">Bật/Tắt bản nhạc nền "Mosslight Path" bằng nút <strong>Nhạc nền</strong> trên thanh điều khiển để đắm chìm vào không gian sử thi huyền bí.</div>
+                    </div>
+                    
+                    <!-- Feature 2: TTS -->
+                    <div class="guide-card">
+                        <div class="guide-card-icon">🔊</div>
+                        <div class="guide-card-title">Giọng Đọc AI Cao Cấp</div>
+                        <div class="guide-card-desc">Đọc truyện rảnh tay bằng giọng nói AI Việt (System/Cloud). <strong>Nhấp đúp chuột</strong> vào bất kỳ đoạn văn nào để phát đọc từ đó. Có thanh điều khiển nổi chỉnh tốc độ.</div>
+                    </div>
+                    
+                    <!-- Feature 3: Interactive Map -->
+                    <div class="guide-card">
+                        <div class="guide-card-icon">🗺️</div>
+                        <div class="guide-card-title">Bản Đồ Nemarian</div>
+                        <div class="guide-card-desc">Bấm vào Bản đồ ở cột phải để mở chế độ chi tiết. Hỗ trợ <strong>cuộn/kéo thả</strong> và <strong>phóng to/thu nhỏ</strong> mượt mà để định vị các địa danh sử thi.</div>
+                    </div>
+                    
+                    <!-- Feature 4: Lore Scroll -->
+                    <div class="guide-card">
+                        <div class="guide-card-icon">📜</div>
+                        <div class="guide-card-title">Bí Thư Lãnh Địa</div>
+                        <div class="guide-card-desc">Cổ thư ở cột bên phải tự động dịch chuyển và cập nhật lịch sử, dữ liệu vùng đất Nemarian tương ứng với từng chương truyện bạn đang đọc.</div>
+                    </div>
+                    
+                    <!-- Feature 5: Themes & Settings -->
+                    <div class="guide-card">
+                        <div class="guide-card-icon">⚙️</div>
+                        <div class="guide-card-title">Cá Nhân Hóa Đọc</div>
+                        <div class="guide-card-desc">Linh hoạt thay đổi 6 chủ đề sử thi (Lục Bảo Akine, Hỏa Morgard...), tùy chỉnh cỡ chữ (A-/A+), chế độ Tự động cuộn và Đánh dấu chương đang đọc.</div>
+                    </div>
+                    
+                    <!-- Feature 6: Shortcuts -->
+                    <div class="guide-card">
+                        <div class="guide-card-icon">⌨️</div>
+                        <div class="guide-card-title">Phím Tắt Tiện Lợi</div>
+                        <div class="guide-card-desc">Dành cho máy tính: Sử dụng phím <strong>Mũi tên Trái / Phải</strong> để chuyển chương nhanh chóng, nhấn phím <strong>ESC</strong> để đóng nhanh bản đồ phóng to hoặc bảng hướng dẫn.</div>
+                    </div>
+                </div>
+                
+                <div class="guide-note">
+                    🛡️ <strong>Lưu ý bảo vệ bản quyền:</strong> Tác phẩm tích hợp hệ thống bảo mật ngăn hành vi sao chép (Ctrl+C, Chuột phải, DevTools F12) nhằm bảo vệ quyền tác giả Mạnh Quyết. Chúc bạn có một hành trình đầy kỳ thú!
+                </div>
+            </div>
+            
+            <footer class="guide-modal-footer">
+                <button class="enter-btn" style="padding: 0.75rem 3rem; font-size: 1rem;" onclick="closeGuideModal()">Bắt Đầu Khám Phá</button>
+            </footer>
+        </div>
     </div>
 
     <!-- Toast Alerts -->

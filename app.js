@@ -273,6 +273,7 @@ window.addEventListener('keydown', function(e) {
         return;
     } else if (e.key === 'Escape') {
         closeMapModal();
+        closeGuideModal();
         return;
     }
 
@@ -570,7 +571,7 @@ function toggleSound() {
             btn.classList.add('playing');
             if (icon) icon.textContent = "🔊";
             if (wave) wave.style.display = "flex";
-            txt.textContent = "Âm thanh: BẬT";
+            txt.textContent = "Nhạc nền: BẬT";
             showToast("Đã kích hoạt nhạc nền ma pháp Mosslight Path!");
         }).catch(e => {
             console.warn("BGM playback blocked by iOS/browser strict audio interaction policy.", e);
@@ -582,7 +583,7 @@ function toggleSound() {
         btn.classList.remove('playing');
         if (icon) icon.textContent = "🔇";
         if (wave) wave.style.display = "none";
-        txt.textContent = "Âm thanh: TẮT";
+        txt.textContent = "Nhạc nền: TẮT";
     }
 }
 
@@ -1356,6 +1357,27 @@ function closeMapModal() {
 function handleMapModalBackgroundClick(e) {
     if (e.target.id === 'map-modal-viewport' || e.target.id === 'map-modal') {
         closeMapModal();
+    }
+}
+
+function openGuideModal() {
+    const modal = document.getElementById('guide-modal');
+    if (modal) {
+        modal.classList.add('open');
+    }
+}
+
+function closeGuideModal() {
+    const modal = document.getElementById('guide-modal');
+    if (modal) {
+        modal.classList.remove('open');
+    }
+}
+
+function handleGuideModalBackgroundClick(e) {
+    const modal = document.getElementById('guide-modal');
+    if (e.target === modal) {
+        closeGuideModal();
     }
 }
 
