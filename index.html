@@ -216,18 +216,8 @@
 
                 <!-- Chronicles Lore Scroll Card -->
                 <div class="widget-card active" id="widget-lore-card">
-                    <div class="widget-header" style="border-bottom: 1px solid rgba(var(--theme-primary-rgb), 0.15); padding-bottom: 0.6rem; margin-bottom: 0.6rem;">
+                    <div class="widget-header" style="border-bottom: 1px solid rgba(var(--theme-primary-rgb), 0.15); padding-bottom: 0.6rem; margin-bottom: 0.6rem; display: flex; justify-content: center;">
                         <span id="crystal-title">📜 Cổ Thư Nemarian</span>
-                        <span id="lore-region" class="lore-crystal-badge">Bí thư 1 / 40</span>
-                    </div>
-
-                    <!-- Category Tab Filters Bar -->
-                    <div class="lore-tabs" style="display: flex; gap: 0.35rem; margin-bottom: 0.8rem; overflow-x: auto; padding-bottom: 0.2rem;">
-                        <button class="lore-tab-btn active" id="lore-tab-all" onclick="filterLoreCategory('all')" title="Tất cả bí mật">🗺️ Tất cả</button>
-                        <button class="lore-tab-btn" id="lore-tab-place" onclick="filterLoreCategory('place')" title="Địa danh lãnh địa">📍 Địa danh</button>
-                        <button class="lore-tab-btn" id="lore-tab-character" onclick="filterLoreCategory('character')" title="Nhân vật sử thi">👥 Nhân vật</button>
-                        <button class="lore-tab-btn" id="lore-tab-magic" onclick="filterLoreCategory('magic')" title="Ma thuật & Phong ấn">🔮 Cổ vật</button>
-                        <button class="lore-tab-btn" id="lore-tab-creature" onclick="filterLoreCategory('creature')" title="Linh thú & Tà vật">🐉 Sinh vật</button>
                     </div>
 
                     <div class="lore-scroll-container">
@@ -237,14 +227,10 @@
                         </p>
                     </div>
                     
-                    <!-- Advanced Pagination Controls -->
-                    <div class="fact-nav-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.9rem; border-top: 1px solid rgba(var(--theme-primary-rgb), 0.15); padding-top: 0.7rem;">
-                        <button class="control-btn" id="prev-fact-btn" onclick="prevFact()" style="padding: 0.35rem 0.65rem; font-size: 0.72rem; min-width: 55px;" title="Bí thư trước">
-                            ◀ Trước
-                        </button>
-                        <span class="lore-page-indicator" id="lore-page-indicator" style="font-size: 0.78rem; font-family: 'EB Garamond', serif; color: var(--theme-primary); font-weight: bold; opacity: 0.9;">[ Cổ thư 1 / 40 ]</span>
-                        <button class="control-btn" id="next-fact-btn" onclick="nextFact()" style="padding: 0.35rem 0.65rem; font-size: 0.72rem; min-width: 55px;" title="Bí thư tiếp theo">
-                            Sau ▶
+                    <!-- Simplified Pagination Controls -->
+                    <div class="fact-nav-container" style="display: flex; justify-content: center; align-items: center; margin-top: 0.9rem; border-top: 1px solid rgba(var(--theme-primary-rgb), 0.15); padding-top: 0.7rem;">
+                        <button class="control-btn" id="next-fact-btn" onclick="nextFact()" style="padding: 0.45rem 1.5rem; font-size: 0.8rem; min-width: 140px; border-radius: 20px; letter-spacing: 0.5px;" title="Xem sự tích tiếp theo">
+                            Xem tiếp ✦
                         </button>
                     </div>
                 </div>

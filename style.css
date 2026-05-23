@@ -2130,32 +2130,30 @@ body.effect-sunshine::after {
     transition: color 0.4s ease;
 }
 
-/* HIỆU ỨNG LẬT TRANG SÁCH CỔ 3D */
-@keyframes pageFlip3D {
+/* HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ MA THUẬT */
+@keyframes elegantFadeGlow {
     0% {
-        transform: rotateY(0deg) scale(1);
         opacity: 1;
-        filter: blur(0px);
+        transform: scale(1);
+        filter: blur(0px) brightness(1);
     }
     48% {
-        transform: rotateY(90deg) scale(0.96);
         opacity: 0;
-        filter: blur(1.5px);
+        transform: scale(0.985);
+        filter: blur(2px) brightness(1.15);
     }
     52% {
-        transform: rotateY(-90deg) scale(0.96);
         opacity: 0;
-        filter: blur(1.5px);
+        transform: scale(0.985);
+        filter: blur(2px) brightness(1.15);
     }
     100% {
-        transform: rotateY(0deg) scale(1);
         opacity: 1;
-        filter: blur(0px);
+        transform: scale(1);
+        filter: blur(0px) brightness(1);
     }
 }
 
-.lore-scroll-container.page-flip-active {
-    animation: pageFlip3D 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    perspective: 1000px;
-    transform-style: preserve-3d;
+.lore-scroll-container.page-fade-active {
+    animation: elegantFadeGlow 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }

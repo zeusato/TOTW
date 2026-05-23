@@ -767,10 +767,10 @@ function setActiveChapter(id, doScroll = true) {
         if (mapMarker) mapMarker.style.opacity = '0';
     }
 
-    // Đồng bộ cổ thư Nemarian theo bối cảnh chương đọc của độc giả
-    if (typeof syncLoreWithChapter === 'function') {
-        syncLoreWithChapter(id);
-    }
+    // Đồng bộ cổ thư Nemarian theo bối cảnh chương đọc của độc giả (đã vô hiệu hóa theo yêu cầu)
+    // if (typeof syncLoreWithChapter === 'function') {
+    //     syncLoreWithChapter(id);
+    // }
 
     // TOC Active indicators syncing
     document.querySelectorAll('.toc-item').forEach((item, idx) => {
@@ -2348,27 +2348,20 @@ function displayFact(index, triggerSparks = true) {
     const container = document.querySelector('.lore-scroll-container');
     const titleEl = document.getElementById('fact-title-text');
     const contentEl = document.getElementById('lore-text-content');
-    const regionEl = document.getElementById('lore-region');
-    const widgetHeaderTitle = document.getElementById('crystal-title');
-    const pageIndicatorEl = document.getElementById('lore-page-indicator');
     
-    if (!container || !contentEl || !regionEl) return;
+    if (!container || !contentEl) return;
     
-    // Kích hoạt hiệu ứng lật trang 3D tinh tế
-    container.classList.add('page-flip-active');
+    // Kích hoạt hiệu ứng chuyển chữ mờ ảo ma thuật mới
+    container.classList.add('page-fade-active');
     
-    // Tại đỉnh điểm của hoạt ảnh xoay 3D (khi thẻ bị quay đi 90 độ và ẩn)
+    // Tại đỉnh điểm của hoạt ảnh mờ (khi chữ mờ đi và biến đổi)
     setTimeout(() => {
         const fact = filteredFacts[index];
-        const absoluteIndex = NEMARIAN_FACTS.indexOf(fact);
         
-        if (widgetHeaderTitle) widgetHeaderTitle.textContent = "📜 Cổ Thư Nemarian";
-        if (regionEl) regionEl.textContent = `Bí thư ${absoluteIndex + 1} / ${NEMARIAN_FACTS.length}`;
         if (titleEl) titleEl.textContent = fact.title;
         if (contentEl) contentEl.textContent = fact.content;
-        if (pageIndicatorEl) pageIndicatorEl.textContent = `[ Cổ thư ${index + 1} / ${filteredFacts.length} ]`;
         
-        // Phun một chòm sao lấp lánh (bụi trăng) quanh khu vực Bí thư ở lề phải để ăn mừng khám phá
+        // Phun một chòm sao lấp lánh (bụi trăng) quanh khu vực Cổ thư ở lề phải để tạo chiều sâu
         if (triggerSparks && particlesEnabled && particles.length > 0) {
             for (let i = 0; i < 9; i++) {
                 let spark = new Particle('moonlight_dust');
@@ -2381,11 +2374,11 @@ function displayFact(index, triggerSparks = true) {
                 particles.push(spark);
             }
         }
-    }, 250); // Ở giữa chu kỳ lật 3D 500ms
+    }, 250); // Ở giữa chu kỳ mượt 500ms
     
     // Gỡ bỏ class hiệu ứng sau khi hoàn tất lật trang
     setTimeout(() => {
-        container.classList.remove('page-flip-active');
+        container.classList.remove('page-fade-active');
     }, 500);
 }
 
@@ -2404,41 +2397,11 @@ function prevFact() {
 }
 
 function filterLoreCategory(category) {
-    // Cập nhật lớp active của các Tab nút bấm lọc
-    document.querySelectorAll('.lore-tab-btn').forEach(btn => btn.classList.remove('active'));
-    
-    let activeBtn = document.getElementById(`lore-tab-${category}`);
-    if (activeBtn) activeBtn.classList.add('active');
-    
-    currentCategory = category;
-    
-    if (category === 'all') {
-        filteredFacts = [...NEMARIAN_FACTS];
-    } else {
-        filteredFacts = NEMARIAN_FACTS.filter(f => f.category === category);
-    }
-    
-    currentFactIndex = 0;
-    displayFact(0, true);
-    resetFactTimer();
+    // Vô hiệu hóa bộ lọc theo yêu cầu
 }
 
 function syncLoreWithChapter(chapterId) {
-    if (!CHAPTER_LORE_MAPPING[chapterId]) return;
-    
-    // Tự động khôi phục về tab "Tất cả" khi đồng bộ bối cảnh chương mới
-    document.querySelectorAll('.lore-tab-btn').forEach(btn => btn.classList.remove('active'));
-    let allBtn = document.getElementById('lore-tab-all');
-    if (allBtn) allBtn.classList.add('active');
-    
-    currentCategory = 'all';
-    filteredFacts = [...NEMARIAN_FACTS];
-    
-    const absoluteIndex = CHAPTER_LORE_MAPPING[chapterId][0];
-    currentFactIndex = absoluteIndex;
-    
-    displayFact(absoluteIndex, true);
-    resetFactTimer();
+    // Vô hiệu hóa đồng bộ theo yêu cầu
 }
 
 function resetFactTimer() {
@@ -2447,7 +2410,7 @@ function resetFactTimer() {
     }
     factTimer = setInterval(() => {
         nextFact();
-    }, 28000); // Xoay tự động mỗi 28 giây
+    }, 60000); // Xoay tự động sự tích mỗi 1 phút (60 giây)
 }
 
 function setupMapModalListeners() {
