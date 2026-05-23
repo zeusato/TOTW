@@ -936,6 +936,38 @@ body.landing-active {
     font-weight: 700;
     border-top: 1px solid rgba(var(--theme-primary-rgb), 0.12);
 }
+.map-glow-marker {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--theme-accent);
+    box-shadow: 0 0 10px var(--theme-accent), 0 0 20px var(--theme-accent);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    animation: pulse-glow-marker 2s infinite ease-in-out;
+    z-index: 5;
+}
+
+@keyframes pulse-glow-marker {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 8px var(--theme-accent), 0 0 15px var(--theme-accent);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.6);
+        box-shadow: 0 0 16px var(--theme-accent), 0 0 32px var(--theme-accent);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 8px var(--theme-accent), 0 0 15px var(--theme-accent);
+        opacity: 0.8;
+    }
+}
 
 /* WIDGET WRAPPER */
 .widget-section {

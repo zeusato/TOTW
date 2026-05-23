@@ -25,6 +25,10 @@
     
     <link rel="stylesheet" href="style.css">
     
+    <!-- PWA Integration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#10b981">
+    
     <!-- Load novel content data -->
     <script src="chapters.js"></script>
 </head>
@@ -200,6 +204,10 @@
                 </h3>
                 <div class="map-container" onclick="openMapModal()">
                     <img src="Assets/Map.png" class="map-image" alt="Bản đồ Nemarian">
+                    <div class="map-glow-marker" id="map-glow-marker"></div>
+                    <div class="map-banner" id="map-active-region">
+                        📍 Đang quét vị trí...
+                    </div>
                 </div>
             </div>
 

@@ -171,6 +171,13 @@ const REGION_NAMES = {
     york: "Thương Cảng Sầm Uất York"
 };
 
+const REGION_COORDINATES = {
+    akine: { x: 48, y: 35 },
+    morgard: { x: 38, y: 22 },
+    aria: { x: 55, y: 56 },
+    york: { x: 65, y: 76 }
+};
+
 // ==========================================================================
 // CORE TRANSITIONS & WIDGET CONTROL
 // ==========================================================================
@@ -517,6 +524,17 @@ function setActiveChapter(id, doScroll = true) {
         banner.innerHTML = `📍 Lãnh địa: ${REGION_NAMES[meta.mapGlow]}`;
     }
 
+    // Update map glow marker coordinates dynamically
+    const mapMarker = document.getElementById('map-glow-marker');
+    if (mapMarker && meta.mapGlow && REGION_COORDINATES[meta.mapGlow]) {
+        const coords = REGION_COORDINATES[meta.mapGlow];
+        mapMarker.style.left = `${coords.x}%`;
+        mapMarker.style.top = `${coords.y}%`;
+        mapMarker.style.opacity = '1';
+    } else if (mapMarker) {
+        mapMarker.style.opacity = '0';
+    }
+
     // Update Facts widget on chapter switch immediately (excluding initial load sequence)
     if (typeof nextFact === 'function' && factTimer) {
         nextFact();
@@ -798,6 +816,17 @@ function initVoices() {
     const viVoices = ttsVoices.filter(v => {
         const lang = v.lang.toLowerCase();
         return lang.startsWith('vi') || lang.includes('-vi') || lang.includes('_vi');
+    });
+
+    // Sắp xếp ưu tiên các giọng đọc Online chất lượng cao (như Microsoft Online/Natural voices trên Edge)
+    viVoices.sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+        const aOnline = aName.includes('online') || aName.includes('natural');
+        const bOnline = bName.includes('online') || bName.includes('natural');
+        if (aOnline && !bOnline) return -1;
+        if (!aOnline && bOnline) return 1;
+        return 0;
     });
 
     if (viVoices.length > 0) {
@@ -1084,6 +1113,15 @@ function readNextParagraph() {
             const viVoices = ttsVoices.filter(v => {
                 const lang = v.lang.toLowerCase();
                 return lang.startsWith('vi') || lang.includes('-vi') || lang.includes('_vi');
+            });
+            viVoices.sort((a, b) => {
+                const aName = a.name.toLowerCase();
+                const bName = b.name.toLowerCase();
+                const aOnline = aName.includes('online') || aName.includes('natural');
+                const bOnline = bName.includes('online') || bName.includes('natural');
+                if (aOnline && !bOnline) return -1;
+                if (!aOnline && bOnline) return 1;
+                return 0;
             });
             if (viVoices.length > 0) {
                 selectedVoice = viVoices[0];
@@ -1661,6 +1699,15 @@ window.addEventListener('DOMContentLoaded', () => {
     const readerCol = document.getElementById('reader-column');
     if (readerCol) {
         readerCol.addEventListener('scroll', trackActiveParagraph);
+    }
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('[PWA] Service Worker registered successfully with scope:', reg.scope))
+                .catch(err => console.error('[PWA] Service Worker registration failed:', err));
+        });
     }
 });
 
