@@ -263,8 +263,11 @@ function showToast(message, icon = '🔖') {
 function setTheme(themeName, swatchEl) {
     document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
     if (swatchEl) swatchEl.classList.add('active');
-    
+    const isFocusActive = document.body.classList.contains('focus-active');
+    const isLandingActive = document.body.classList.contains('landing-active');
     document.body.className = `theme-${themeName}`;
+    if (isFocusActive) document.body.classList.add('focus-active');
+    if (isLandingActive) document.body.classList.add('landing-active');
     selectedTheme = themeName;
     initParticles();
 }
@@ -524,7 +527,11 @@ function setActiveChapter(id, doScroll = true) {
     const meta = CHAPTER_METADATA[id] || { theme: 'forest', mapGlow: 'akine', loreKey: 'akine' };
     
     // Theme switching
+    const isFocusActive = document.body.classList.contains('focus-active');
+    const isLandingActive = document.body.classList.contains('landing-active');
     document.body.className = `theme-${meta.theme}`;
+    if (isFocusActive) document.body.classList.add('focus-active');
+    if (isLandingActive) document.body.classList.add('landing-active');
     selectedTheme = meta.theme;
 
     // Highlight map region overview banner and glow marker coordinates dynamically
