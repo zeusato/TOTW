@@ -187,6 +187,30 @@ const CHAPTER_LOCATIONS = {
     20: { name: "Vách Núi Nam Hồ Đen (Cốt Long)", x: 85, y: 47 }
 };
 
+const CHAPTER_WEATHER_TYPES = {
+    1: 'firefly',
+    2: 'ember',
+    3: 'purple_dust',
+    4: 'none',
+    5: 'leaf',
+    6: 'ripple',
+    7: 'none',
+    8: 'rain',
+    9: 'glow_spot',
+    10: 'none',
+    11: 'smoke',
+    12: 'electric',
+    13: 'vortex',
+    14: 'bubble',
+    15: 'blood_rain',
+    16: 'petal',
+    17: 'fire_arrow',
+    18: 'none',
+    19: 'none',
+    20: 'bone_mist',
+    21: 'ember'
+};
+
 // ==========================================================================
 // CORE TRANSITIONS & WIDGET CONTROL
 // ==========================================================================
@@ -533,6 +557,28 @@ function setActiveChapter(id, doScroll = true) {
     if (isFocusActive) document.body.classList.add('focus-active');
     if (isLandingActive) document.body.classList.add('landing-active');
     selectedTheme = meta.theme;
+
+    // Remove all previous screen effects
+    document.body.classList.remove('effect-vignette-gold', 'effect-moonlight', 'effect-noise', 'effect-sunshine');
+    
+    // Remove temporary flash and light column overlays if any
+    const oldOverlay = document.getElementById('magic-screen-overlay');
+    if (oldOverlay) oldOverlay.remove();
+    
+    // Apply chapter specific screen overlay effects
+    if (id === 4) {
+        document.body.classList.add('effect-vignette-gold');
+    } else if (id === 7) {
+        document.body.classList.add('effect-moonlight');
+    } else if (id === 18) {
+        document.body.classList.add('effect-noise');
+    } else if (id === 21) {
+        document.body.classList.add('effect-sunshine');
+    } else if (id === 10) {
+        triggerMagicFlash();
+    } else if (id === 19) {
+        triggerLightColumn();
+    }
 
     // Highlight map region overview banner and glow marker coordinates dynamically
     const banner = document.getElementById('map-active-region');
@@ -1314,8 +1360,9 @@ function resizeCanvas() {
 }
 
 class Particle {
-    constructor(colors, baseSpeed, direction = 1) {
-        this.reset(colors, baseSpeed, direction);
+    constructor(type) {
+        this.type = type;
+        this.reset();
         // Scatter particles initially with random states to avoid synchronized fade-ins
         this.x = Math.random() * canvasWidth;
         this.y = Math.random() * canvasHeight;
@@ -1323,62 +1370,324 @@ class Particle {
         this.fadeState = Math.random() > 0.5 ? 'in' : 'out';
     }
 
-    reset(colors, baseSpeed, direction = 1) {
+    reset() {
         this.x = Math.random() * canvasWidth;
         this.y = Math.random() * canvasHeight;
-        this.size = Math.random() * 2.5 + 0.8;
-        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.size = Math.random() * 2 + 0.8;
+        this.color = '#ffffff';
         this.alpha = 0;
-        this.maxAlpha = (Math.random() * 0.55 + 0.15) * 1.2;
+        this.maxAlpha = Math.random() * 0.5 + 0.2;
         this.fadeState = 'in';
-        // slow organic fade speed: takes ~200-500 frames to fade in/out
-        this.fadeSpeed = Math.random() * 0.0025 + 0.001;
+        this.fadeSpeed = Math.random() * 0.003 + 0.001;
         
-        // Wandering / aimless drift parameters (trôi lững lờ không quỹ đạo)
-        this.angle = Math.random() * Math.PI * 2;
-        this.angleSpeed = Math.random() * 0.016 - 0.008; // slow turn rate
-        this.speed = Math.random() * baseSpeed * 0.8 + 0.05; // slow drift speed magnitude
+        switch(this.type) {
+            case 'firefly':
+                this.color = `hsla(${55 + Math.random()*15}, 100%, 75%, 1)`; // Vàng chanh nhạt mờ ảo
+                this.size = Math.random() * 3.2 + 1.2;
+                this.speedX = Math.random() * 0.35 - 0.175;
+                this.speedY = Math.random() * 0.35 - 0.175;
+                this.maxAlpha = Math.random() * 0.45 + 0.15;
+                this.fadeSpeed = Math.random() * 0.004 + 0.002;
+                break;
+            case 'ember':
+                this.color = Math.random() > 0.5 ? '#ef4444' : '#f97316'; // Đỏ hoặc Cam
+                this.x = Math.random() * canvasWidth;
+                this.y = canvasHeight + 10;
+                this.size = Math.random() * 2.2 + 0.8;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = -(Math.random() * 1.3 + 0.6); // Bay ngược lên
+                this.maxAlpha = Math.random() * 0.65 + 0.25;
+                this.fadeSpeed = Math.random() * 0.008 + 0.004;
+                break;
+            case 'purple_dust':
+                this.color = Math.random() > 0.5 ? '#e9d5ff' : '#d8b4fe'; // Tím nhạt rơi chậm
+                this.y = -10;
+                this.size = Math.random() * 1.8 + 0.8;
+                this.speedX = Math.random() * 0.15 - 0.075;
+                this.speedY = Math.random() * 0.5 + 0.25;
+                this.maxAlpha = Math.random() * 0.55 + 0.15;
+                this.fadeSpeed = Math.random() * 0.005 + 0.002;
+                break;
+            case 'leaf':
+                this.color = Math.random() > 0.5 ? '#10b981' : '#34d399'; // Xanh lá cây
+                this.x = -50;
+                this.y = Math.random() * canvasHeight;
+                this.size = Math.random() * 18 + 10; // Độ dài line lướt ngang
+                this.speedX = Math.random() * 2.5 + 1.8;
+                this.speedY = Math.random() * 0.3 - 0.15;
+                this.maxAlpha = Math.random() * 0.25 + 0.08;
+                this.fadeSpeed = 0.008;
+                break;
+            case 'ripple':
+                this.x = Math.random() * canvasWidth;
+                this.y = Math.random() * canvasHeight;
+                this.size = 2; // Bán kính
+                this.maxSize = Math.random() * 50 + 25; // Lan tỏa
+                this.speedSize = Math.random() * 0.5 + 0.3;
+                this.color = 'rgba(148, 163, 184, 0.22)';
+                this.maxAlpha = Math.random() * 0.35 + 0.1;
+                this.alpha = this.maxAlpha;
+                this.fadeSpeed = 0.003;
+                this.fadeState = 'out';
+                break;
+            case 'rain':
+                this.color = 'rgba(148, 163, 184, 0.35)'; // Mưa rơi xám
+                this.y = -20;
+                this.x = Math.random() * (canvasWidth + 200) - 100;
+                this.size = Math.random() * 1.2 + 0.6; // Độ dày nét vẽ
+                this.speedX = -2.0; // Rơi nghiêng
+                this.speedY = Math.random() * 7 + 7;
+                this.maxAlpha = Math.random() * 0.45 + 0.15;
+                this.alpha = this.maxAlpha;
+                break;
+            case 'glow_spot':
+                this.color = Math.random() > 0.5 ? '#d8b4fe' : '#c084fc';
+                this.size = Math.random() * 7 + 3;
+                this.speedX = Math.random() * 0.18 - 0.09;
+                this.speedY = Math.random() * 0.18 - 0.09;
+                this.maxAlpha = Math.random() * 0.35 + 0.1;
+                this.fadeSpeed = Math.random() * 0.003 + 0.001;
+                this.growDir = 1;
+                break;
+            case 'smoke':
+                this.color = 'rgba(15, 23, 42, 0.75)'; // Mây bụi đen vẩn vơ
+                this.size = Math.random() * 110 + 70;
+                this.speedX = Math.random() * 0.25 - 0.125;
+                this.speedY = Math.random() * 0.16 - 0.08;
+                this.maxAlpha = Math.random() * 0.12 + 0.04;
+                this.fadeSpeed = Math.random() * 0.0018 + 0.0008;
+                break;
+            case 'electric':
+                this.color = '#22d3ee'; // Xanh neon dây điện
+                this.size = Math.random() * 2.5 + 0.8;
+                this.speedX = Math.random() * 1.8 - 0.9;
+                this.speedY = Math.random() * 1.8 - 0.9;
+                this.maxAlpha = Math.random() * 0.75 + 0.15;
+                this.fadeSpeed = Math.random() * 0.04 + 0.015;
+                break;
+            case 'vortex':
+                this.color = 'rgba(248, 250, 252, 0.65)'; // Vòng xoáy trắng
+                this.size = Math.random() * 1.8 + 0.6;
+                this.angle = Math.random() * Math.PI * 2;
+                this.radius = Math.random() * Math.min(canvasWidth, canvasHeight) * 0.45 + 15;
+                this.angularSpeed = Math.random() * 0.018 + 0.004;
+                this.radialSpeed = -(Math.random() * 0.4 + 0.08);
+                break;
+            case 'bubble':
+                this.color = Math.random() > 0.5 ? 'rgba(56, 189, 248, 0.35)' : 'rgba(168, 85, 247, 0.25)'; // Bong bóng lam + sét tím
+                this.y = canvasHeight + 10;
+                this.size = Math.random() * 5 + 1.5;
+                this.speedX = Math.random() * 0.35 - 0.175;
+                this.speedY = -(Math.random() * 1.1 + 0.3);
+                this.maxAlpha = Math.random() * 0.55 + 0.15;
+                this.fadeSpeed = 0.0045;
+                break;
+            case 'blood_rain':
+                this.color = 'rgba(153, 27, 27, 0.55)'; // Mưa máu rơi chậm
+                this.y = -20;
+                this.x = Math.random() * (canvasWidth + 100) - 50;
+                this.size = Math.random() * 1.3 + 0.6;
+                this.speedX = -0.4;
+                this.speedY = Math.random() * 2.8 + 1.8;
+                this.maxAlpha = Math.random() * 0.6 + 0.25;
+                this.alpha = this.maxAlpha;
+                break;
+            case 'petal':
+                this.color = Math.random() > 0.5 ? '#f472b6' : '#fecdd3'; // Cánh hoa đào rơi lả tả
+                this.y = -10;
+                this.x = Math.random() * canvasWidth;
+                this.size = Math.random() * 4.5 + 2.5;
+                this.speedX = Math.random() * 0.75 + 0.35; // Rơi nghiêng phải
+                this.speedY = Math.random() * 0.75 + 0.45;
+                this.maxAlpha = Math.random() * 0.65 + 0.25;
+                this.fadeSpeed = Math.random() * 0.0035 + 0.0015;
+                this.swingSpeed = Math.random() * 0.035 + 0.015;
+                this.swingRange = Math.random() * 1.8 + 0.8;
+                this.swingTime = Math.random() * 100;
+                break;
+            case 'fire_arrow':
+                this.color = '#ef4444'; // Mũi tên lửa đỏ lướt nhanh
+                this.x = canvasWidth + 50;
+                this.y = Math.random() * canvasHeight;
+                this.size = Math.random() * 50 + 35; // Chiều dài mũi tên
+                this.speedX = -(Math.random() * 7 + 7);
+                this.speedY = Math.random() * 0.3 - 0.15;
+                this.maxAlpha = Math.random() * 0.75 + 0.2;
+                this.alpha = this.maxAlpha;
+                break;
+            case 'bone_mist':
+                this.color = Math.random() > 0.55 ? '#f8fafc' : '#059669'; // Xương trắng + sương lục bảo
+                this.size = Math.random() * 2.6 + 0.8;
+                this.speedX = Math.random() * 0.75 - 0.375;
+                this.speedY = Math.random() * 0.5 - 0.25;
+                this.maxAlpha = Math.random() * 0.55 + 0.15;
+                this.fadeSpeed = Math.random() * 0.0048 + 0.0018;
+                break;
+            default:
+                this.color = '#ffffff';
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 0.2 - 0.1;
+                this.speedY = Math.random() * 0.2 - 0.1;
+                this.maxAlpha = Math.random() * 0.5 + 0.2;
+                this.fadeSpeed = Math.random() * 0.003 + 0.001;
+        }
     }
 
-    update(colors, baseSpeed, direction = 1) {
-        // Slow lazy wander
-        this.angle += this.angleSpeed;
-        this.x += Math.cos(this.angle) * this.speed;
-        this.y += Math.sin(this.angle) * this.speed;
-
-        // Fading in and out logic (nổi lên rồi tắt)
-        if (this.fadeState === 'in') {
-            this.alpha += this.fadeSpeed;
-            if (this.alpha >= this.maxAlpha) {
-                this.alpha = this.maxAlpha;
-                this.fadeState = 'out';
-            }
-        } else if (this.fadeState === 'out') {
-            this.alpha -= this.fadeSpeed;
-            if (this.alpha <= 0) {
-                this.alpha = 0;
-                this.reset(colors, baseSpeed, direction);
-            }
+    update() {
+        switch(this.type) {
+            case 'leaf':
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvasWidth + 50) this.reset();
+                break;
+            case 'ripple':
+                this.size += this.speedSize;
+                this.alpha -= this.fadeSpeed;
+                if (this.alpha <= 0 || this.size >= this.maxSize) this.reset();
+                break;
+            case 'rain':
+            case 'blood_rain':
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y > canvasHeight + 20 || this.x < -50) this.reset();
+                break;
+            case 'vortex':
+                this.angle += this.angularSpeed;
+                this.radius += this.radialSpeed;
+                this.x = canvasWidth / 2 + Math.cos(this.angle) * this.radius;
+                this.y = canvasHeight / 2 + Math.sin(this.angle) * this.radius;
+                if (this.radius <= 5) this.reset();
+                break;
+            case 'fire_arrow':
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < -100) this.reset();
+                break;
+            case 'petal':
+                this.swingTime += this.swingSpeed;
+                this.x += this.speedX + Math.sin(this.swingTime) * this.swingRange;
+                this.y += this.speedY;
+                if (this.y > canvasHeight + 10 || this.x > canvasWidth + 10) this.reset();
+                break;
+            case 'glow_spot':
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.size += this.growDir * 0.045;
+                if (this.size >= 11) this.growDir = -1;
+                if (this.size <= 3.5) this.growDir = 1;
+                
+                if (this.fadeState === 'in') {
+                    this.alpha += this.fadeSpeed;
+                    if (this.alpha >= this.maxAlpha) this.fadeState = 'out';
+                } else {
+                    this.alpha -= this.fadeSpeed;
+                    if (this.alpha <= 0) this.reset();
+                }
+                break;
+            default:
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.fadeState === 'in') {
+                    this.alpha += this.fadeSpeed;
+                    if (this.alpha >= this.maxAlpha) {
+                        this.alpha = this.maxAlpha;
+                        this.fadeState = 'out';
+                    }
+                } else if (this.fadeState === 'out') {
+                    this.alpha -= this.fadeSpeed;
+                    if (this.alpha <= 0) {
+                        this.alpha = 0;
+                        this.reset();
+                    }
+                }
         }
 
-        // Boundary checks - reset particle if it drifts off screen bounds
-        if (this.x < -20 || this.x > canvasWidth + 20 || this.y < -20 || this.y > canvasHeight + 20) {
-            this.reset(colors, baseSpeed, direction);
+        if (this.type !== 'vortex' && this.type !== 'leaf' && this.type !== 'rain' && this.type !== 'blood_rain' && this.type !== 'fire_arrow' && this.type !== 'petal') {
+            if (this.x < -50 || this.x > canvasWidth + 50 || this.y < -50 || this.y > canvasHeight + 50) {
+                this.reset();
+            }
         }
     }
 
     draw() {
         ctx.save();
         ctx.globalAlpha = this.alpha;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        
-        // Neon ambient outer glow filter
-        ctx.shadowBlur = this.size * 2.5;
-        ctx.shadowColor = this.color;
-        
-        ctx.fill();
+
+        if (this.type === 'rain' || this.type === 'blood_rain') {
+            ctx.beginPath();
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = this.size;
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + this.speedX * 1.5, this.y + this.speedY * 1.5);
+            ctx.stroke();
+        } else if (this.type === 'leaf') {
+            ctx.beginPath();
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1.3;
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + this.size, this.y);
+            ctx.stroke();
+        } else if (this.type === 'fire_arrow') {
+            ctx.beginPath();
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2.2;
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + this.size, this.y);
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = this.color;
+            ctx.stroke();
+        } else if (this.type === 'ripple') {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+        } else if (this.type === 'electric') {
+            ctx.beginPath();
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = this.size;
+            ctx.moveTo(this.x, this.y);
+            let targetX = this.x + this.speedX * 15 + (Math.random() * 12 - 6);
+            let targetY = this.y + this.speedY * 15 + (Math.random() * 12 - 6);
+            ctx.lineTo(targetX, targetY);
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
+            ctx.stroke();
+        } else if (this.type === 'bubble') {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            if (this.color.includes('56, 189, 248')) {
+                // Bong bóng nước xanh lam nhạt: vẽ viền mỏng sáng và một điểm bóng nhỏ ở góc trên bên trái
+                ctx.strokeStyle = 'rgba(186, 230, 253, 0.75)';
+                ctx.lineWidth = 0.8;
+                ctx.stroke();
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.12)';
+                ctx.fill();
+                
+                // Điểm sáng phản chiếu của bong bóng
+                ctx.beginPath();
+                ctx.arc(this.x - this.size * 0.35, this.y - this.size * 0.35, this.size * 0.15, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fill();
+            } else {
+                // Tia sét/hạt lôi điện tím phát sáng rực rỡ
+                ctx.fillStyle = '#e879f9';
+                ctx.shadowBlur = this.size * 2.5;
+                ctx.shadowColor = '#d946ef';
+                ctx.fill();
+            }
+        } else {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+
+            if (this.type === 'firefly' || this.type === 'ember' || this.type === 'glow_spot' || this.type === 'bone_mist' || this.type === 'purple_dust') {
+                ctx.shadowBlur = this.size * 2.2;
+                ctx.shadowColor = this.color;
+            }
+            ctx.fill();
+        }
         ctx.restore();
     }
 }
@@ -1386,28 +1695,31 @@ class Particle {
 function initParticles() {
     particles = [];
     if (!particlesEnabled) return;
-    
-    const config = THEME_PARTICLES[selectedTheme] || THEME_PARTICLES.forest;
-    const direction = config.direction || 1;
-    
-    for (let i = 0; i < config.count; i++) {
-        particles.push(new Particle(config.color, config.speed, direction));
+
+    const weatherType = CHAPTER_WEATHER_TYPES[currentChapterId] || 'default';
+    if (weatherType === 'none') return; // Canvas trống, hiệu ứng đặc biệt xử lý bằng DOM Overlay
+
+    let count = 55;
+    if (weatherType === 'rain' || weatherType === 'blood_rain') count = 110;
+    if (weatherType === 'smoke') count = 18;
+    if (weatherType === 'electric') count = 25;
+    if (weatherType === 'vortex') count = 75;
+
+    for (let i = 0; i < count; i++) {
+        particles.push(new Particle(weatherType));
     }
 }
 
 function animateParticles() {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    
+
     if (particlesEnabled) {
-        const config = THEME_PARTICLES[selectedTheme] || THEME_PARTICLES.forest;
-        const direction = config.direction || 1;
-        
         particles.forEach(p => {
-            p.update(config.color, config.speed, direction);
+            p.update();
             p.draw();
         });
     }
-    
+
     requestAnimationFrame(animateParticles);
 }
 
@@ -1728,6 +2040,49 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+function triggerMagicFlash() {
+    const flash = document.createElement('div');
+    flash.id = 'magic-screen-overlay';
+    flash.style.position = 'fixed';
+    flash.style.top = '0';
+    flash.style.left = '0';
+    flash.style.width = '100vw';
+    flash.style.height = '100vh';
+    flash.style.backgroundColor = '#ffffff';
+    flash.style.zIndex = '9999';
+    flash.style.pointerEvents = 'none';
+    flash.style.opacity = '1';
+    flash.style.transition = 'opacity 1.2s ease-out';
+    document.body.appendChild(flash);
+    
+    // Trigger animation
+    setTimeout(() => {
+        flash.style.opacity = '0';
+        setTimeout(() => flash.remove(), 1200);
+    }, 50);
+}
+
+function triggerLightColumn() {
+    const overlay = document.createElement('div');
+    overlay.id = 'magic-screen-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '-100vh';
+    overlay.style.left = '0';
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.background = 'linear-gradient(to bottom, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 100%)';
+    overlay.style.zIndex = '9999';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.transition = 'top 1.5s cubic-bezier(0.25, 1, 0.5, 1)';
+    document.body.appendChild(overlay);
+    
+    // Quét xuống
+    setTimeout(() => {
+        overlay.style.top = '100vh';
+        setTimeout(() => overlay.remove(), 1600);
+    }, 50);
+}
 
 // ==========================================================================
 // FOCUS MODE (ZEN MODE) LOGIC
