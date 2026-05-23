@@ -1663,3 +1663,30 @@ window.addEventListener('DOMContentLoaded', () => {
         readerCol.addEventListener('scroll', trackActiveParagraph);
     }
 });
+
+// ==========================================================================
+// FOCUS MODE (ZEN MODE) LOGIC
+// ==========================================================================
+
+let isFocusMode = false;
+function toggleFocusMode() {
+    isFocusMode = !isFocusMode;
+    const body = document.body;
+    const btn = document.getElementById('focus-btn');
+    const icon = document.getElementById('focus-icon');
+    const txt = document.getElementById('focus-text');
+    
+    if (isFocusMode) {
+        body.classList.add('focus-active');
+        if (btn) btn.classList.add('active');
+        if (icon) icon.textContent = "🧘";
+        if (txt) txt.textContent = " Tập trung: BẬT";
+        showToast("Đã kích hoạt chế độ đọc tập trung ma pháp!", "🧘");
+    } else {
+        body.classList.remove('focus-active');
+        if (btn) btn.classList.remove('active');
+        if (icon) icon.textContent = "👁️";
+        if (txt) txt.textContent = " Tập trung: TẮT";
+        showToast("Đã tắt chế độ đọc tập trung.", "👁️");
+    }
+}
