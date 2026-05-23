@@ -1820,7 +1820,7 @@ body.landing-active {
     transform: translateY(0);
 }
 
-/* 3. Chế độ đọc tập trung (Focus/Zen Mode) */
+/* Chế độ tập trung chỉ ẩn cột bên phải, KHÔNG thay đổi thanh header */
 body.focus-active .interaction-column {
     opacity: 0;
     visibility: hidden;
@@ -1849,20 +1849,7 @@ body.focus-active .reader-column {
     transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 
-/* Ẩn bớt các nút khi ở chế độ tập trung, chỉ giữ lại nút Focus Mode và Branding */
-body.focus-active .control-bar .controls-group > *:not(#focus-btn) {
-    opacity: 0.15;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-/* Khi di chuột vào thanh bar thì hiện lại toàn bộ nút điều khiển */
-body.focus-active .control-bar:hover .controls-group > * {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* Hiệu ứng nổi bật cho nút Focus Mode khi được kích hoạt */
+/* Nút Focus Mode khi được kích hoạt */
 #focus-btn.active {
     background: var(--theme-accent) !important;
     color: #ffffff !important;

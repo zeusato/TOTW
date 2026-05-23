@@ -572,7 +572,7 @@ function toggleSound() {
             btn.classList.add('playing');
             if (icon) icon.textContent = "🔊";
             if (wave) wave.style.display = "flex";
-            txt.textContent = "Nhạc nền: BẬT";
+            txt.textContent = "Nhạc nền";
             showToast("Đã kích hoạt nhạc nền ma pháp Mosslight Path!");
         }).catch(e => {
             console.warn("BGM playback blocked by iOS/browser strict audio interaction policy.", e);
@@ -584,7 +584,7 @@ function toggleSound() {
         btn.classList.remove('playing');
         if (icon) icon.textContent = "🔇";
         if (wave) wave.style.display = "none";
-        txt.textContent = "Nhạc nền: TẮT";
+        txt.textContent = "Nhạc nền";
     }
 }
 
@@ -1680,13 +1680,13 @@ function toggleFocusMode() {
         body.classList.add('focus-active');
         if (btn) btn.classList.add('active');
         if (icon) icon.textContent = "🧘";
-        if (txt) txt.textContent = " Tập trung: BẬT";
+        if (txt) txt.textContent = "Tập trung";
         showToast("Đã kích hoạt chế độ đọc tập trung ma pháp!", "🧘");
     } else {
         body.classList.remove('focus-active');
         if (btn) btn.classList.remove('active');
         if (icon) icon.textContent = "👁️";
-        if (txt) txt.textContent = " Tập trung: TẮT";
+        if (txt) txt.textContent = "Tập trung";
         showToast("Đã tắt chế độ đọc tập trung.", "👁️");
     }
 }
