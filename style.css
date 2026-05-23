@@ -761,7 +761,7 @@ body.landing-active {
 }
 
 /* Elegant drop cap drop caps */
-.story-text p:first-of-type::first-letter {
+.story-text p:first-of-type .drop-cap {
     font-family: var(--font-display);
     font-size: 3.8rem;
     font-weight: 800;
@@ -1834,7 +1834,7 @@ body.landing-active {
    ========================================================================== */
 
 /* 1. Nâng cấp Drop Cap ma thuật cổ điển */
-.story-text p:first-of-type::first-letter {
+.story-text p:first-of-type .drop-cap {
     font-family: 'EB Garamond', var(--font-display), serif !important;
     font-size: 4.2rem !important;
     font-weight: 800 !important;
@@ -1960,23 +1960,63 @@ body.effect-vignette-gold::after {
     50% { box-shadow: inset 0 0 100px rgba(251, 191, 36, 0.4); }
 }
 
-/* Chương 7: Ánh trăng dát bạc lấp lánh nhẹ */
+/* Chương 7: Ánh trăng dát bạc - Dải sáng nghiêng lộng lẫy pulsing */
 body.effect-moonlight::after {
+    content: '';
+    position: fixed;
+    top: -20vh;
+    right: -20vw;
+    width: 80vw;
+    height: 120vh;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 80%);
+    transform: rotate(-15deg);
+    pointer-events: none;
+    z-index: 9998;
+    filter: blur(20px);
+    animation: silverMoonbeamPulse 6s infinite ease-in-out;
+}
+
+@keyframes silverMoonbeamPulse {
+    0%, 100% { opacity: 0.6; transform: rotate(-15deg) scale(0.98); }
+    50% { opacity: 1.0; transform: rotate(-13deg) scale(1.03); }
+}
+
+/* Chương 11: Màn sương đen của Sieth u ám bao phủ Hồ Đen */
+body.effect-dark-mist::after {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 80%);
+    box-shadow: inset 0 0 100px rgba(15, 23, 42, 0.75);
     pointer-events: none;
     z-index: 9998;
-    animation: silverMoonPulse 5s infinite ease-in-out;
+    animation: darkMistPulse 6s infinite ease-in-out;
 }
 
-@keyframes silverMoonPulse {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1.2; }
+@keyframes darkMistPulse {
+    0%, 100% { box-shadow: inset 0 0 90px rgba(15, 23, 42, 0.65); }
+    50% { box-shadow: inset 0 0 130px rgba(15, 23, 42, 0.85); }
+}
+
+/* Chương 15: Nghi lễ hiến tế - Màn sương máu đỏ thẫm */
+body.effect-blood-haze::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    box-shadow: inset 0 0 100px rgba(153, 27, 27, 0.22);
+    pointer-events: none;
+    z-index: 9998;
+    animation: bloodHazePulse 5s infinite ease-in-out;
+}
+
+@keyframes bloodHazePulse {
+    0%, 100% { box-shadow: inset 0 0 70px rgba(153, 27, 27, 0.15); }
+    50% { box-shadow: inset 0 0 120px rgba(153, 27, 27, 0.35); }
 }
 
 /* Chương 18: Nhiễu ảnh tivi cũ mờ ảo / Sepia */

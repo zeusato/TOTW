@@ -22,6 +22,11 @@ let canvasWidth = window.innerWidth;
 let canvasHeight = window.innerHeight;
 let particlesEnabled = true;
 
+// Custom weather system variables
+let eggCracks = [];
+let sanctifyingScanActive = false;
+let sanctifyingScanX = -200;
+
 // Selected chapters illustration database
 const ILLUSTRATIONS = {
     1: { src: 'Assets/chapter_1_scene.png', alt: 'Khởi Phong - Sườn núi Morgard rực đỏ hoàng hôn cuối đông' },
@@ -194,7 +199,7 @@ const CHAPTER_WEATHER_TYPES = {
     4: 'none',
     5: 'leaf',
     6: 'ripple',
-    7: 'none',
+    7: 'moonlight_dust',
     8: 'rain',
     9: 'glow_spot',
     10: 'none',
@@ -206,7 +211,7 @@ const CHAPTER_WEATHER_TYPES = {
     16: 'petal',
     17: 'fire_arrow',
     18: 'none',
-    19: 'none',
+    19: 'black_dust',
     20: 'bone_mist',
     21: 'ember'
 };
@@ -407,6 +412,18 @@ document.addEventListener('dragstart', function(e) {
 // RENDER CHAPTERS & TABLE OF CONTENTS
 // ==========================================================================
 
+function applyDropCap(text) {
+    // Tìm ký tự chữ cái đầu tiên (hỗ trợ cả Unicode tiếng Việt)
+    const match = text.match(/\p{L}/u);
+    if (!match) return text;
+    
+    const index = match.index;
+    const letter = match[0];
+    
+    // Trả về chuỗi HTML với ký tự chữ cái đầu tiên được bọc trong span.drop-cap
+    return text.substring(0, index) + `<span class="drop-cap">${letter}</span>` + text.substring(index + 1);
+}
+
 function renderChapters() {
     const container = document.getElementById('chapters-reading-container');
     container.innerHTML = '';
@@ -438,6 +455,7 @@ function renderChapters() {
         const textDiv = document.createElement('div');
         textDiv.className = 'story-text';
 
+        let firstParaProcessed = false;
         ch.paragraphs.forEach((p, idx) => {
             // Check if paragraph is a section divider (* * *)
             if (/^\s*\*(\s*\*)*\s*$/.test(p.trim())) {
@@ -453,7 +471,6 @@ function renderChapters() {
             } else {
                 const pTag = document.createElement('p');
                 pTag.id = `ch-${ch.id}-p-${idx}`;
-                pTag.textContent = p;
                 pTag.style.cursor = 'pointer';
                 pTag.title = "Bấm đúp chuột để phát âm thanh từ đoạn này";
                 pTag.addEventListener('dblclick', () => {
@@ -461,6 +478,13 @@ function renderChapters() {
                         startTTSFromParagraph(idx);
                     }
                 });
+
+                if (!firstParaProcessed) {
+                    pTag.innerHTML = applyDropCap(p);
+                    firstParaProcessed = true;
+                } else {
+                    pTag.textContent = p;
+                }
                 textDiv.appendChild(pTag);
             }
         });
@@ -559,7 +583,7 @@ function setActiveChapter(id, doScroll = true) {
     selectedTheme = meta.theme;
 
     // Remove all previous screen effects
-    document.body.classList.remove('effect-vignette-gold', 'effect-moonlight', 'effect-noise', 'effect-sunshine');
+    document.body.classList.remove('effect-vignette-gold', 'effect-moonlight', 'effect-noise', 'effect-sunshine', 'effect-dark-mist', 'effect-blood-haze');
     
     // Remove temporary flash and light column overlays if any
     const oldOverlay = document.getElementById('magic-screen-overlay');
@@ -570,14 +594,16 @@ function setActiveChapter(id, doScroll = true) {
         document.body.classList.add('effect-vignette-gold');
     } else if (id === 7) {
         document.body.classList.add('effect-moonlight');
+    } else if (id === 11) {
+        document.body.classList.add('effect-dark-mist'); // Sương độc u ám của Sieth
+    } else if (id === 15) {
+        document.body.classList.add('effect-blood-haze'); // Sương máu tế đàn hiến tế
     } else if (id === 18) {
         document.body.classList.add('effect-noise');
     } else if (id === 21) {
         document.body.classList.add('effect-sunshine');
     } else if (id === 10) {
-        triggerMagicFlash();
-    } else if (id === 19) {
-        triggerLightColumn();
+        triggerMagicFlash(); // Lóe sáng khởi đầu khi trứng rồng nứt
     }
 
     // Highlight map region overview banner and glow marker coordinates dynamically
@@ -1408,6 +1434,19 @@ class Particle {
                 this.maxAlpha = Math.random() * 0.55 + 0.15;
                 this.fadeSpeed = Math.random() * 0.005 + 0.002;
                 break;
+            case 'moonlight_dust':
+                this.color = '#f1f5f9'; // Trắng bạc dịu mát
+                this.y = -10;
+                this.x = Math.random() * canvasWidth;
+                this.size = Math.random() * 2.8 + 1.2;
+                this.speedX = Math.random() * 0.35 + 0.1; // Trôi nhẹ sang phải
+                this.speedY = Math.random() * 0.35 + 0.2; // Rơi rất chậm
+                this.maxAlpha = Math.random() * 0.65 + 0.25;
+                this.fadeSpeed = Math.random() * 0.004 + 0.002;
+                this.swingSpeed = Math.random() * 0.02 + 0.01;
+                this.swingRange = Math.random() * 1.2 + 0.5;
+                this.swingTime = Math.random() * 100;
+                break;
             case 'leaf':
                 this.color = Math.random() > 0.5 ? '#10b981' : '#34d399'; // Xanh lá cây
                 this.x = -50;
@@ -1422,12 +1461,12 @@ class Particle {
                 this.x = Math.random() * canvasWidth;
                 this.y = Math.random() * canvasHeight;
                 this.size = 2; // Bán kính
-                this.maxSize = Math.random() * 50 + 25; // Lan tỏa
-                this.speedSize = Math.random() * 0.5 + 0.3;
-                this.color = 'rgba(148, 163, 184, 0.22)';
-                this.maxAlpha = Math.random() * 0.35 + 0.1;
+                this.maxSize = Math.random() * 100 + 60; // Lan rộng hơn lãng mạn
+                this.speedSize = Math.random() * 0.6 + 0.4;
+                this.color = 'rgba(191, 219, 254, 0.45)'; // Xanh lam bạc rõ hơn
+                this.maxAlpha = Math.random() * 0.4 + 0.25; // Sáng rõ
                 this.alpha = this.maxAlpha;
-                this.fadeSpeed = 0.003;
+                this.fadeSpeed = 0.004;
                 this.fadeState = 'out';
                 break;
             case 'rain':
@@ -1450,12 +1489,12 @@ class Particle {
                 this.growDir = 1;
                 break;
             case 'smoke':
-                this.color = 'rgba(15, 23, 42, 0.75)'; // Mây bụi đen vẩn vơ
-                this.size = Math.random() * 110 + 70;
-                this.speedX = Math.random() * 0.25 - 0.125;
-                this.speedY = Math.random() * 0.16 - 0.08;
-                this.maxAlpha = Math.random() * 0.12 + 0.04;
-                this.fadeSpeed = Math.random() * 0.0018 + 0.0008;
+                this.color = 'rgba(15, 23, 42, 0.85)'; // Sương khói u ám bao bao phủ
+                this.size = Math.random() * 130 + 80; // Volumetric smoke to bồng bềnh
+                this.speedX = Math.random() * 0.3 - 0.15;
+                this.speedY = Math.random() * 0.2 - 0.1;
+                this.maxAlpha = Math.random() * 0.16 + 0.06;
+                this.fadeSpeed = Math.random() * 0.0015 + 0.0006;
                 break;
             case 'electric':
                 this.color = '#22d3ee'; // Xanh neon dây điện
@@ -1483,13 +1522,13 @@ class Particle {
                 this.fadeSpeed = 0.0045;
                 break;
             case 'blood_rain':
-                this.color = 'rgba(153, 27, 27, 0.55)'; // Mưa máu rơi chậm
+                this.color = 'rgba(220, 38, 38, 0.75)'; // Mưa máu đỏ tươi tương phản cao
                 this.y = -20;
-                this.x = Math.random() * (canvasWidth + 100) - 50;
-                this.size = Math.random() * 1.3 + 0.6;
-                this.speedX = -0.4;
-                this.speedY = Math.random() * 2.8 + 1.8;
-                this.maxAlpha = Math.random() * 0.6 + 0.25;
+                this.x = Math.random() * (canvasWidth + 200) - 100;
+                this.size = Math.random() * 1.8 + 0.8; // Dày dặn
+                this.speedX = -1.2;
+                this.speedY = Math.random() * 8 + 7; // Rơi xối xả nhanh mạnh
+                this.maxAlpha = Math.random() * 0.65 + 0.3;
                 this.alpha = this.maxAlpha;
                 break;
             case 'petal':
@@ -1507,13 +1546,24 @@ class Particle {
                 break;
             case 'fire_arrow':
                 this.color = '#ef4444'; // Mũi tên lửa đỏ lướt nhanh
-                this.x = canvasWidth + 50;
+                this.x = canvasWidth + 100;
                 this.y = Math.random() * canvasHeight;
-                this.size = Math.random() * 50 + 35; // Chiều dài mũi tên
-                this.speedX = -(Math.random() * 7 + 7);
-                this.speedY = Math.random() * 0.3 - 0.15;
-                this.maxAlpha = Math.random() * 0.75 + 0.2;
+                this.size = Math.random() * 40 + 25; // Chiều dài thon gọn hơn
+                this.speedX = -(Math.random() * 4 + 3.5); // Bay chậm dịu nhẹ hơn
+                this.speedY = Math.random() * 0.2 - 0.1;
+                this.maxAlpha = Math.random() * 0.18 + 0.08; // Rất mờ nhẹ phía sau chữ
                 this.alpha = this.maxAlpha;
+                break;
+            case 'black_dust':
+                this.x = Math.random() * canvasWidth;
+                this.y = Math.random() * canvasHeight;
+                this.size = Math.random() * 3 + 1.2;
+                this.color = '#020617'; // Màu đen tà khí sa đọa
+                this.maxAlpha = Math.random() * 0.65 + 0.3;
+                this.alpha = this.maxAlpha;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.3 - 0.15;
+                this.evaporated = false;
                 break;
             case 'bone_mist':
                 this.color = Math.random() > 0.55 ? '#f8fafc' : '#059669'; // Xương trắng + sương lục bảo
@@ -1569,6 +1619,31 @@ class Particle {
                 this.y += this.speedY;
                 if (this.y > canvasHeight + 10 || this.x > canvasWidth + 10) this.reset();
                 break;
+            case 'moonlight_dust':
+                this.swingTime += this.swingSpeed;
+                this.x += this.speedX + Math.sin(this.swingTime) * this.swingRange;
+                this.y += this.speedY;
+                if (this.y > canvasHeight + 10 || this.x > canvasWidth + 10) this.reset();
+                break;
+            case 'black_dust':
+                if (sanctifyingScanActive && this.x < sanctifyingScanX) {
+                    this.evaporated = true;
+                }
+                if (this.evaporated) {
+                    this.y += -(Math.random() * 3.5 + 1.5); // Bay vút lên nhanh
+                    this.x += Math.random() * 0.8 - 0.4;    // Rung động hỗn loạn nhẹ
+                    this.alpha -= 0.018;                    // Mờ dần rồi bay biến
+                    if (this.alpha <= 0) {
+                        this.alpha = 0;
+                    }
+                } else {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < -10 || this.x > canvasWidth + 10 || this.y < -10 || this.y > canvasHeight + 10) {
+                        this.reset();
+                    }
+                }
+                break;
             case 'glow_spot':
                 this.x += this.speedX;
                 this.y += this.speedY;
@@ -1603,7 +1678,7 @@ class Particle {
                 }
         }
 
-        if (this.type !== 'vortex' && this.type !== 'leaf' && this.type !== 'rain' && this.type !== 'blood_rain' && this.type !== 'fire_arrow' && this.type !== 'petal') {
+        if (this.type !== 'vortex' && this.type !== 'leaf' && this.type !== 'rain' && this.type !== 'blood_rain' && this.type !== 'fire_arrow' && this.type !== 'petal' && this.type !== 'moonlight_dust' && this.type !== 'black_dust') {
             if (this.x < -50 || this.x > canvasWidth + 50 || this.y < -50 || this.y > canvasHeight + 50) {
                 this.reset();
             }
@@ -1641,7 +1716,7 @@ class Particle {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1.2;
+            ctx.lineWidth = 1.6; // Nét vẽ sóng nước dày dặn rõ nét hơn
             ctx.stroke();
         } else if (this.type === 'electric') {
             ctx.beginPath();
@@ -1677,12 +1752,35 @@ class Particle {
                 ctx.shadowColor = '#d946ef';
                 ctx.fill();
             }
+        } else if (this.type === 'smoke') {
+            // Khói đen thể tích: vẽ bằng Radial Gradient để các rìa khói bồng bềnh mờ dần tự nhiên
+            let smokeGrad = ctx.createRadialGradient(this.x, this.y, this.size * 0.05, this.x, this.y, this.size);
+            smokeGrad.addColorStop(0, `rgba(15, 23, 42, ${this.alpha * 0.95})`);
+            smokeGrad.addColorStop(0.5, `rgba(30, 41, 59, ${this.alpha * 0.4})`);
+            smokeGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = smokeGrad;
+            ctx.fill();
+        } else if (this.type === 'black_dust') {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            if (this.evaporated) {
+                // Đang bốc cháy càn quét: hạt sáng lên màu cam/đỏ tàn tro nhấp nháy phát sáng
+                ctx.fillStyle = Math.random() > 0.5 ? '#f97316' : '#ef4444';
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#f97316';
+            } else {
+                ctx.fillStyle = this.color;
+            }
+            ctx.fill();
         } else {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fillStyle = this.color;
 
-            if (this.type === 'firefly' || this.type === 'ember' || this.type === 'glow_spot' || this.type === 'bone_mist' || this.type === 'purple_dust') {
+            if (this.type === 'firefly' || this.type === 'ember' || this.type === 'glow_spot' || this.type === 'bone_mist' || this.type === 'purple_dust' || this.type === 'moonlight_dust') {
                 ctx.shadowBlur = this.size * 2.2;
                 ctx.shadowColor = this.color;
             }
@@ -1694,16 +1792,37 @@ class Particle {
 
 function initParticles() {
     particles = [];
+    
+    // Reset và xóa các trạng thái thời tiết ma thuật đặc biệt
+    eggCracks = [];
+    sanctifyingScanActive = false;
+    
     if (!particlesEnabled) return;
 
     const weatherType = CHAPTER_WEATHER_TYPES[currentChapterId] || 'default';
+    
+    // Khởi tạo các vết nứt trứng rồng nếu ở chương 10
+    if (currentChapterId === 10) {
+        generateEggCracks();
+    }
+    
+    // Kích hoạt dải sáng Thần quang càn quét nếu ở chương 19
+    if (currentChapterId === 19) {
+        sanctifyingScanActive = true;
+        sanctifyingScanX = -200;
+    }
+
     if (weatherType === 'none') return; // Canvas trống, hiệu ứng đặc biệt xử lý bằng DOM Overlay
 
     let count = 55;
-    if (weatherType === 'rain' || weatherType === 'blood_rain') count = 110;
+    if (weatherType === 'rain') count = 110;
+    if (weatherType === 'blood_rain') count = 160; // Tăng mật độ cho bão mưa máu chương 15
     if (weatherType === 'smoke') count = 18;
     if (weatherType === 'electric') count = 25;
     if (weatherType === 'vortex') count = 75;
+    if (weatherType === 'fire_arrow') count = 5; // Tiết chế tối đa 5 mũi tên lửa tránh rối mắt
+    if (weatherType === 'black_dust') count = 60; // 60 hạt tà khí đen bị thiêu rụi chương 19
+    if (weatherType === 'moonlight_dust') count = 45; // 45 hạt bụi trăng nhẹ nhàng lấp lánh chương 7
 
     for (let i = 0; i < count; i++) {
         particles.push(new Particle(weatherType));
@@ -1718,9 +1837,147 @@ function animateParticles() {
             p.update();
             p.draw();
         });
+        
+        // Vẽ "Nhịp đập vàng & Vết nứt trứng" cho Chương 10
+        if (currentChapterId === 10) {
+            drawGoldenEggPulse();
+        }
+        
+        // Vẽ dải quét "Thần quang thanh tẩy" cho Chương 19
+        if (currentChapterId === 19) {
+            drawSanctifyingScan();
+        }
     }
 
     requestAnimationFrame(animateParticles);
+}
+
+// --------------------------------------------------------------------------
+// HÀM HỖ TRỢ HIỆU ỨNG THỜI TIẾT MA THUẬT ĐẶC BIỆT (CHƯƠNG 10 & 19)
+// --------------------------------------------------------------------------
+
+function generateEggCracks() {
+    eggCracks = [];
+    const centerX = canvasWidth / 2;
+    const centerY = canvasHeight / 2;
+    const mainBranches = 6 + Math.floor(Math.random() * 4); // 6-9 nhánh nứt chính
+    
+    for (let i = 0; i < mainBranches; i++) {
+        let angle = (i / mainBranches) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+        let segments = 3 + Math.floor(Math.random() * 3); // 3-5 phân đoạn mỗi nhánh
+        let startX = centerX;
+        let startY = centerY;
+        let currentRad = 0;
+        
+        for (let j = 0; j < segments; j++) {
+            currentRad += Math.random() * 35 + 15;
+            let segmentAngle = angle + (Math.random() * 0.5 - 0.25);
+            let endX = centerX + Math.cos(segmentAngle) * currentRad;
+            let endY = centerY + Math.sin(segmentAngle) * currentRad;
+            
+            eggCracks.push({
+                startX: startX,
+                startY: startY,
+                endX: endX,
+                endY: endY
+            });
+            
+            // Tạo nhánh phụ chân chim
+            if (Math.random() > 0.55) {
+                let subAngle = segmentAngle + (Math.random() > 0.5 ? 0.6 : -0.6);
+                let subEndX = endX + Math.cos(subAngle) * (currentRad * 0.35);
+                let subEndY = endY + Math.sin(subAngle) * (currentRad * 0.35);
+                eggCracks.push({
+                    startX: endX,
+                    startY: endY,
+                    endX: subEndX,
+                    endY: subEndY
+                });
+            }
+            
+            startX = endX;
+            startY = endY;
+        }
+    }
+}
+
+function drawGoldenEggPulse() {
+    let time = Date.now() * 0.0022; // Nhịp tim chậm rãi, tự nhiên
+    let pulse = (Math.sin(time) + 1) / 2; // Vòng tuần hoàn [0, 1]
+    let opacity = 0.12 + pulse * 0.38; // [0.12, 0.50]
+    
+    // Vẽ quầng sáng gradient vàng cam dịu ấm
+    let radGrad = ctx.createRadialGradient(
+        canvasWidth / 2, canvasHeight / 2, 10,
+        canvasWidth / 2, canvasHeight / 2, Math.min(canvasWidth, canvasHeight) * 0.42
+    );
+    radGrad.addColorStop(0, `rgba(251, 191, 36, ${opacity})`);
+    radGrad.addColorStop(0.4, `rgba(249, 115, 22, ${opacity * 0.4})`);
+    radGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    
+    ctx.save();
+    ctx.fillStyle = radGrad;
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    
+    // Vẽ các vết nứt mạng nhện rực rỡ khi nhịp đập lên đỉnh (pulse > 0.68)
+    if (pulse > 0.68 && eggCracks.length > 0) {
+        let crackAlpha = (pulse - 0.68) / 0.32;
+        ctx.strokeStyle = `rgba(254, 240, 138, ${crackAlpha * 0.85})`;
+        ctx.lineWidth = 1.3;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#facc15';
+        
+        ctx.beginPath();
+        eggCracks.forEach(c => {
+            ctx.moveTo(c.startX, c.startY);
+            ctx.lineTo(c.endX, c.endY);
+        });
+        ctx.stroke();
+    }
+    ctx.restore();
+}
+
+function drawSanctifyingScan() {
+    if (!sanctifyingScanActive) return;
+    
+    // Quét đứng chạy từ trái sang phải màn hình
+    sanctifyingScanX += 13;
+    
+    // Vẽ dải sáng Linear Gradient trắng bạc cực lớn
+    let grad = ctx.createLinearGradient(sanctifyingScanX - 120, 0, sanctifyingScanX + 120, 0);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+    grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.75)');
+    grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    
+    ctx.save();
+    ctx.fillStyle = grad;
+    ctx.fillRect(sanctifyingScanX - 120, 0, 240, canvasHeight);
+    
+    // Vẽ tia sét trung tâm phát sáng oai vệ thanh tẩy tà vật
+    ctx.beginPath();
+    ctx.moveTo(sanctifyingScanX, 0);
+    ctx.lineTo(sanctifyingScanX, canvasHeight);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 5;
+    ctx.shadowBlur = 35;
+    ctx.shadowColor = 'rgba(255, 255, 255, 0.95)';
+    ctx.stroke();
+    ctx.restore();
+    
+    // Tự động lặp lại chu kỳ quét thần quang sau mỗi 8 giây
+    if (sanctifyingScanX > canvasWidth + 200) {
+        sanctifyingScanActive = false;
+        setTimeout(() => {
+            if (currentChapterId === 19) {
+                sanctifyingScanX = -200;
+                sanctifyingScanActive = true;
+                // Khôi phục các hạt tà khí đen để càn quét lượt tiếp theo
+                particles.forEach(p => {
+                    if (p.type === 'black_dust') p.reset();
+                });
+            }
+        }, 8000);
+    }
 }
 
 // ==========================================================================
