@@ -602,8 +602,6 @@ function setActiveChapter(id, doScroll = true) {
         document.body.classList.add('effect-noise');
     } else if (id === 21) {
         document.body.classList.add('effect-sunshine');
-    } else if (id === 10) {
-        triggerMagicFlash(); // Lóe sáng khởi đầu khi trứng rồng nứt
     }
 
     // Highlight map region overview banner and glow marker coordinates dynamically
@@ -1405,6 +1403,7 @@ class Particle {
         this.maxAlpha = Math.random() * 0.5 + 0.2;
         this.fadeState = 'in';
         this.fadeSpeed = Math.random() * 0.003 + 0.001;
+        this.delay = 0;
         
         switch(this.type) {
             case 'firefly':
@@ -1461,12 +1460,12 @@ class Particle {
                 this.x = Math.random() * canvasWidth;
                 this.y = Math.random() * canvasHeight;
                 this.size = 2; // Bán kính
-                this.maxSize = Math.random() * 100 + 60; // Lan rộng hơn lãng mạn
-                this.speedSize = Math.random() * 0.6 + 0.4;
-                this.color = 'rgba(191, 219, 254, 0.45)'; // Xanh lam bạc rõ hơn
-                this.maxAlpha = Math.random() * 0.4 + 0.25; // Sáng rõ
+                this.maxSize = Math.random() * 80 + 40; // Lan rộng lãng mạn nhẹ
+                this.speedSize = Math.random() * 0.14 + 0.08; // Lan rộng cực kỳ chậm rãi
+                this.color = 'rgba(191, 219, 254, 0.38)'; // Xanh lam bạc rõ và dịu mát
+                this.maxAlpha = Math.random() * 0.38 + 0.22; // Sáng vừa phải
                 this.alpha = this.maxAlpha;
-                this.fadeSpeed = 0.004;
+                this.fadeSpeed = 0.0012; // Biến mất rất chậm và nhẹ nhàng
                 this.fadeState = 'out';
                 break;
             case 'rain':
@@ -1545,14 +1544,15 @@ class Particle {
                 this.swingTime = Math.random() * 100;
                 break;
             case 'fire_arrow':
-                this.color = '#ef4444'; // Mũi tên lửa đỏ lướt nhanh
-                this.x = canvasWidth + 100;
-                this.y = Math.random() * canvasHeight;
-                this.size = Math.random() * 40 + 25; // Chiều dài thon gọn hơn
-                this.speedX = -(Math.random() * 4 + 3.5); // Bay chậm dịu nhẹ hơn
-                this.speedY = Math.random() * 0.2 - 0.1;
-                this.maxAlpha = Math.random() * 0.18 + 0.08; // Rất mờ nhẹ phía sau chữ
+                this.color = Math.random() > 0.5 ? '#f97316' : '#ef4444'; // Hỏa tiễn cam hoặc đỏ rực
+                this.x = canvasWidth + Math.random() * 300; // Xuất hiện ngẫu nhiên bên phải ngoài màn hình
+                this.y = -Math.random() * 200; // Xuất hiện ngẫu nhiên phía trên ngoài màn hình
+                this.size = Math.random() * 35 + 12; // Độ lớn thon dài ngẫu nhiên (xa/gần)
+                this.speedX = -(Math.random() * 5.5 + 4); // Bay chéo nghiêng sang trái
+                this.speedY = Math.random() * 4.5 + 3; // Bay nghiêng xuống dưới
+                this.maxAlpha = Math.random() * 0.34 + 0.06; // Ngẫu nhiên rõ/mờ phong phú
                 this.alpha = this.maxAlpha;
+                this.delay = Math.random() * 240; // Trễ xuất hiện ngẫu nhiên để tạo đợt bắn dày/thưa ngắt quãng
                 break;
             case 'black_dust':
                 this.x = Math.random() * canvasWidth;
@@ -1609,9 +1609,13 @@ class Particle {
                 if (this.radius <= 5) this.reset();
                 break;
             case 'fire_arrow':
+                if (this.delay > 0) {
+                    this.delay--;
+                    break;
+                }
                 this.x += this.speedX;
                 this.y += this.speedY;
-                if (this.x < -100) this.reset();
+                if (this.x < -100 || this.y > canvasHeight + 100) this.reset();
                 break;
             case 'petal':
                 this.swingTime += this.swingSpeed;
@@ -1686,6 +1690,8 @@ class Particle {
     }
 
     draw() {
+        if (this.delay > 0) return; // Không vẽ hạt đang trong hàng đợi delay
+        
         ctx.save();
         ctx.globalAlpha = this.alpha;
 
@@ -1706,9 +1712,10 @@ class Particle {
         } else if (this.type === 'fire_arrow') {
             ctx.beginPath();
             ctx.strokeStyle = this.color;
-            ctx.lineWidth = 2.2;
+            ctx.lineWidth = Math.max(1.0, this.size * 0.07); // Độ dày nét vẽ tỉ lệ theo độ xa/gần (size)
             ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x + this.size, this.y);
+            // Bay chéo chéo nghiêng chéo góc từ góc trên bên phải xuống dưới bên trái
+            ctx.lineTo(this.x - this.speedX * 2.0, this.y - this.speedY * 2.0);
             ctx.shadowBlur = 8;
             ctx.shadowColor = this.color;
             ctx.stroke();
@@ -1801,11 +1808,6 @@ function initParticles() {
 
     const weatherType = CHAPTER_WEATHER_TYPES[currentChapterId] || 'default';
     
-    // Khởi tạo các vết nứt trứng rồng nếu ở chương 10
-    if (currentChapterId === 10) {
-        generateEggCracks();
-    }
-    
     // Kích hoạt dải sáng Thần quang càn quét nếu ở chương 19
     if (currentChapterId === 19) {
         sanctifyingScanActive = true;
@@ -1817,10 +1819,11 @@ function initParticles() {
     let count = 55;
     if (weatherType === 'rain') count = 110;
     if (weatherType === 'blood_rain') count = 160; // Tăng mật độ cho bão mưa máu chương 15
+    if (weatherType === 'ripple') count = 18; // Chỉ dùng 18 hạt gợn nước để thật thưa thớt và tĩnh lặng
     if (weatherType === 'smoke') count = 18;
     if (weatherType === 'electric') count = 25;
     if (weatherType === 'vortex') count = 75;
-    if (weatherType === 'fire_arrow') count = 5; // Tiết chế tối đa 5 mũi tên lửa tránh rối mắt
+    if (weatherType === 'fire_arrow') count = 24; // Mật độ phối hợp với delay tạo đợt bắn ngẫu nhiên dày/thưa
     if (weatherType === 'black_dust') count = 60; // 60 hạt tà khí đen bị thiêu rụi chương 19
     if (weatherType === 'moonlight_dust') count = 45; // 45 hạt bụi trăng nhẹ nhàng lấp lánh chương 7
 
@@ -1918,22 +1921,6 @@ function drawGoldenEggPulse() {
     ctx.save();
     ctx.fillStyle = radGrad;
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    
-    // Vẽ các vết nứt mạng nhện rực rỡ khi nhịp đập lên đỉnh (pulse > 0.68)
-    if (pulse > 0.68 && eggCracks.length > 0) {
-        let crackAlpha = (pulse - 0.68) / 0.32;
-        ctx.strokeStyle = `rgba(254, 240, 138, ${crackAlpha * 0.85})`;
-        ctx.lineWidth = 1.3;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#facc15';
-        
-        ctx.beginPath();
-        eggCracks.forEach(c => {
-            ctx.moveTo(c.startX, c.startY);
-            ctx.lineTo(c.endX, c.endY);
-        });
-        ctx.stroke();
-    }
     ctx.restore();
 }
 
