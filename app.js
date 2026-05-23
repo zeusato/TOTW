@@ -56,85 +56,229 @@ const ILLUSTRATIONS = {
 const NEMARIAN_FACTS = [
     {
         title: "Lục địa Nemarian",
+        category: "place",
         content: "Một vùng đất rộng lớn với địa hình đa dạng, nơi chung sống của nhiều chủng tộc như Nhân tộc, Tiên tộc, Người thú (Aniz) và các sinh vật hắc ám sau trận thánh chiến Armageddon 1000 năm trước. Điểm nhấn địa lý quan trọng nhất là dãy Kronos – \"nóc nhà của đại lục\", nơi bắt nguồn của dòng sông Narime huyết mạch."
     },
     {
         title: "Rừng Akine",
+        category: "place",
         content: "Một cấm địa bất khả xâm phạm đối với Nhân tộc, đóng vai trò là biên giới tự nhiên giữa quốc gia Akhaban và Asteria. Khu rừng này ẩn chứa vô số dã thú nguy hiểm, các loài ma thú bị ám hóa và cũng là nơi tọa lạc của các phong ấn cổ xưa giam giữ linh hồn quỷ dữ."
     },
     {
         title: "Thánh địa Midhelm",
+        category: "place",
         content: "Thủ phủ của tộc High Elf, được xây dựng trên núi Ignir và hồ Nawa giữa trung tâm rừng Akine. Kiến trúc nơi đây vô cùng tinh mỹ với những ngôi nhà trên thân cây cổ thụ khổng lồ, hệ thống \"thăng giáng bàn\" ma thuật và những cây cầu nổi lơ lửng nhờ đá phản trọng lực."
     },
     {
         title: "Người Aniz (Người thú)",
+        category: "character",
         content: "Một chủng tộc có khả năng biến hình dựa trên đặc tính của các loài thú tự nhiên. Họ sống trong 13 ngôi làng rải rác khắp rừng Akine, trong đó làng Tunggal là nơi nhân vật chính Zariond lớn lên."
     },
     {
         title: "Thú Ấn (Beast Mark)",
+        category: "magic",
         content: "Dấu ấn sức mạnh xuất hiện trên cơ thể trẻ em Aniz từ 5 đến 10 tuổi, đặc trưng cho loài thú hộ thân mà chúng nắm giữ. Người sở hữu có thể hóa hình một phần hoặc toàn bộ cơ thể để sử dụng sức mạnh thể chất và pháp thuật bản năng của loài thú đó."
     },
     {
         title: "Hóa thú toàn phần",
+        category: "magic",
         content: "Trạng thái chiến đấu tối thượng của người Aniz, cho phép họ bộc phát toàn bộ sức mạnh nguyên thủy nhưng cũng đầy rủi ro. Nếu lạm dụng hoặc mất kiểm soát trong trạng thái này, họ có thể bị \"thú hóa\" vĩnh viễn và không thể trở lại hình dáng con người."
     },
     {
         title: "Mạch ma pháp & Pháp căn",
+        category: "magic",
         content: "Hệ thống vận hành năng lượng cổ xưa trong cơ thể sinh vật, cho phép hấp thụ trực tiếp ma lực từ tự nhiên. Ở hầu hết con người, hệ thống này đã bị thoái hóa do quá phụ thuộc vào vật dẫn bên ngoài, nhưng Zariond là một ngoại lệ hiếm hoi sở hữu Mạch ma pháp nguyên vẹn."
     },
     {
         title: "Thuộc tính Trắng",
+        category: "magic",
         content: "Một thuộc tính pháp thuật đặc biệt khiến người sở hữu không có thuộc tính gốc cố định, giống như một \"chiếc bình thủy tinh rỗng\". Điểm yếu là tiêu tốn năng lượng cực lớn và khó dùng phép cấp cao, nhưng nếu khai mở được Mạch ma pháp, người sở hữu có thể thi triển mọi hệ phép thuật mà không cần vật dẫn."
     },
     {
         title: "Thất đại phong ấn",
+        category: "magic",
         content: "Hệ thống bảy điểm phong ấn bí mật trên lục địa, nơi giam giữ bảy mảnh linh hồn bị chia cắt của Quỷ Vương Xerath sau trận thánh chiến. Mỗi phong ấn đều sử dụng một thần khí cổ xưa để duy trì kết giới dựa trên chính nguồn ma lực của mảnh linh hồn bên trong."
     },
     {
         title: "Hồ Đen (Black Lake)",
+        category: "place",
         content: "Một trong Thất đại phong ấn nằm trong rừng Akine, có nước đen đặc như hắc ín và bốc mùi tử khí. Tại tâm hồ có một hòn đảo đá trơ trọi đặt pháp trận phong ấn, nơi Sieth đã thực hiện nghi lễ hiến tế máu để giải phóng mảnh linh hồn Quỷ Vương."
     },
     {
         title: "Sieth (Kẻ sa đọa)",
+        category: "character",
         content: "Em trai của vua High Elf Varus, một thiên tài pháp thuật bị biến chất do đố kỵ và bị thực thể Lich quyền năng nhập xác. Hắn là kẻ duy nhất sở hữu đồng thời ba thuộc tính pháp thuật: Hỏa, Lôi và Ám, cũng như có tri thức uyên bác về các phong ấn cổ xưa."
     },
     {
         title: "Hồn Ngọc (Soul Orbs)",
+        category: "magic",
         content: "Những viên đá hình giọt nước màu đỏ máu chứa đựng mảnh linh hồn tà ác của Quỷ Vương. Khi được giải phóng và hấp thụ vào chiếc nhẫn đầu lâu, chúng ban cho Sieth nguồn sức mạnh hắc ám khổng lồ và khả năng thao túng các sinh vật chết chóc."
     },
     {
         title: "Cốt Long (Bone Dragon)",
+        category: "creature",
         content: "Một con rồng xương khổng lồ được Sieth triệu hồi từ lòng đất hồ Đen, có ngọn lửa xanh ma quái cháy rực trong hốc mắt. Nó sở hữu đòn tấn công Mortis Murus (Bức tường chết chóc) phun ra luồng tử khí và axit cực độc có thể ăn mòn cả kim loại lẫn linh hồn."
     },
     {
         title: "Milenia (Công chúa High Elf)",
+        category: "character",
         content: "Con gái út của vua Varus, sở hữu năng khiếu pháp thuật vượt trội, đặc biệt là Thủy hệ và thuật trị liệu. Cô đã giả dạng mạo hiểm giả tên Mina để bỏ trốn khỏi Midhelm và trở thành người dẫn dắt Zariond trên con đường khám phá sức mạnh thật sự."
     },
     {
         title: "Talia & Marcus",
+        category: "creature",
         content: "Hai con sói băng khổng lồ (Sói ma thú), là con của đôi sói đã theo bảo vệ Hanu từ 20 năm trước. Chúng có linh trí cao, có khả năng tạo ra vuốt băng sắc lẻm và là những người bạn đồng hành trung thành nhất của anh em Zariond."
     },
     {
         title: "Cây Akkai",
+        category: "place",
         content: "Thần thụ của làng Tunggal, có bộ rễ cắm sâu vào lòng đất bao trọn một khối ma thạch khổng lồ. Cây có khả năng tương tác với các pháp sư để tạo ra một kết giới phòng thủ hùng mạnh bảo vệ toàn bộ ngôi làng khỏi các đợt tấn công của tà vật."
     },
     {
         title: "Cây Aqua",
+        category: "place",
         content: "Loài thực vật đặc hữu của làng Blomine, có rễ chứa đầy nước dinh dưỡng rủ xuống từ vách núi như những tấm rèm. Vào ban đêm, các bọng nước trên rễ cây sẽ phát sáng màu tím huyền ảo, tạo nên kỳ quan ánh sáng độc đáo trong lòng núi Bloodmoon."
     },
     {
         title: "Thú Triều (Beast Tide)",
+        category: "magic",
         content: "Hiện tượng tà vật thoát khỏi phong ấn, sử dụng năng lượng hắc ám để \"ám hóa\" các loài ma thú và dã thú, điều khiển chúng tấn công ồ ạt vào các khu dân cư. Đây là thảm họa kinh hoàng nhất mà các làng người Aniz từng phải đối mặt."
     },
     {
         title: "Lưu Ảnh Thạch (Memory Stone)",
+        category: "magic",
         content: "Một vật phẩm ma pháp quý giá có hình cuốn sách mở khảm đá xanh, dùng để lưu giữ ký ức và hình ảnh của người sở hữu. Zariond đã nhờ nó mà chứng kiến được toàn bộ bi kịch tại Ngôi nhà đá trắng và sự hy sinh của cha mẹ ruột mình."
     },
     {
         title: "Amber (Rồng lửa con)",
+        category: "creature",
         content: "Một chú rồng đỏ nở ra từ quả trứng quý giá của rồng Rakan mà Zariond tình cờ tìm thấy dưới suối. Amber có khả năng hấp thụ lửa, lớn nhanh như thổi và sở hữu một dạ dày \"không đáy\" giống hệt chủ nhân của mình."
+    },
+    {
+        title: "Dãy Kronos",
+        category: "place",
+        content: "Được mệnh danh là \"nóc nhà của đại lục\", đây là dãy núi hùng vĩ quanh năm tuyết phủ nằm ở cực Bắc. Đây là nơi khởi nguồn của dòng sông Narime huyết mạch chảy xuyên suốt các vương quốc."
+    },
+    {
+        title: "Sông Narime",
+        category: "place",
+        content: "Mang ý nghĩa là \"Mẹ hiền\" trong ngôn ngữ Tiên tộc, dòng sông này chảy qua ba quốc gia Imeris, Akhaban và Asteria. Nó được coi là linh hồn của rừng Akine, cung cấp sự trù phú và màu mỡ cho thảm thực vật nơi đây."
+    },
+    {
+        title: "Thành phố York & Thương cảng Torant",
+        category: "place",
+        content: "Trung tâm kinh tế lớn nhất của vương quốc Asteria nằm ở vùng đồng bằng Lamine. Thương cảng Torant mỗi ngày đón hàng trăm lượt tàu thuyền giao thương, kết nối kinh đô Aria với thế giới bên ngoài."
+    },
+    {
+        title: "Kinh đô Aria",
+        category: "place",
+        content: "Thủ đô của vương quốc Asteria, nơi các chủng tộc chung sống hòa thuận và hàng hóa từ khắp nơi đổ về. Sau trận thánh chiến năm xưa, kinh đô này đã từng phải di dời lên phía Bắc do sự tàn phá của quân đoàn quỷ."
+    },
+    {
+        title: "Đảo Quỷ",
+        category: "place",
+        content: "Hòn đảo bị nguyền rủa ở cực Nam biển Sirphie, nổi bật với ngọn núi đá đen có hình dáng chiếc đầu lâu khổng lồ đang há miệng. Phía trên đỉnh núi là hai ngọn núi lửa ngày đêm phun dung nham tựa như cặp sừng của quỷ dữ."
+    },
+    {
+        title: "Núi Morgard",
+        category: "place",
+        content: "Ngọn núi có ba đỉnh với hình dáng như một chiếc đinh ba màu bạc xuyên thủng bầu trời rừng Akine. Bên trong núi thực chất là một hang động khổng lồ, sâu không thấy đáy, nơi rồng lửa Rakan chọn làm tổ."
+    },
+    {
+        title: "Hồ Nawa",
+        category: "place",
+        content: "Một mặt gương khổng lồ bên cạnh núi Ignir, có làn nước xanh thẳm không bao giờ đóng băng hay gợn sóng dù thời tiết thay đổi. Mực nước hồ luôn ổn định nhờ thông với một dòng sông ngầm bí ẩn."
+    },
+    {
+        title: "Thần Navis",
+        category: "character",
+        content: "Vị vua đầu tiên của người High Elf, người đã thức tỉnh sức mạnh thần thánh để giải phóng đồng tộc khỏi kiếp nô lệ. Ông đã dẫn dắt Tiên tộc vào rừng Akine định cư và được tôn thờ như một vị thần tối cao."
+    },
+    {
+        title: "Huyết thệ (Blood Oath)",
+        category: "magic",
+        content: "Một loại lời thề ràng buộc bằng máu phổ biến trong thế giới ngầm, sử dụng Huyết thệ phù do các pháp sư chế tạo. Nếu làm trái lời thề, người phạm quy sẽ chịu lời nguyền từ đau đầu cho đến chết cả ba đời."
+    },
+    {
+        title: "Thăng giáng bàn",
+        category: "magic",
+        content: "Một loại phương tiện di chuyển ma thuật đặc trưng của Midhelm, gồm những bục đá vuông có thể tự động nâng người lên cao hoặc hạ xuống theo câu chú ngữ đơn giản."
+    },
+    {
+        title: "Cầu nổi ma thuật",
+        category: "magic",
+        content: "Những cây cầu gỗ lơ lửng trên không trung nối các ngôi nhà trên cây tại Midhelm. Chúng được cố định nhờ các viên đá ma thuật phản trọng lực màu tím than khảm ở hai đầu cầu."
+    },
+    {
+        title: "Cây Imoa",
+        category: "place",
+        content: "Loài cây quý hiếm luôn mọc hai thân xoắn vào nhau như bím tóc, một thân nở hoa đỏ và thân còn lại nở hoa lam. Quả của chúng có tác dụng chữa bệnh thần kỳ và là nguyên liệu cho các pháp thuật trị thương cao cấp."
+    },
+    {
+        title: "Trường Miojin",
+        category: "place",
+        content: "Ngôi trường pháp thuật cao quý nhất tại thánh địa Midhelm, nơi chuyên bồi dưỡng cho con em hoàng tộc và những nhân tài kiệt xuất của Tiên tộc."
+    },
+    {
+        title: "Kỵ sĩ bóng đêm (Dark Knight)",
+        category: "creature",
+        content: "Những tà vật mặc giáp đen toàn thân, cưỡi ngựa xương và sở hữu kỹ năng chiến đấu đáng sợ. Chúng có khả năng ẩn hiện trong bóng tối và gây ra những vết thương chí mạng bằng hắc kiếm."
+    },
+    {
+        title: "Người đá khổng lồ (Mountain Golem)",
+        category: "creature",
+        content: "Những sinh vật ma pháp khổng lồ được tạo thành từ đá núi, có thể sử dụng cả một gốc cổ thụ làm vũ khí. Chúng có điểm yếu nằm ở phiến đá năng lượng sau gáy và giữa trán."
+    },
+    {
+        title: "Tử thần (Reaper)",
+        category: "creature",
+        content: "Tà vật cấp cao có hình dạng bóng ma mặc áo chùng đen rách nát, cầm lưỡi hái khổng lồ. Chúng có khả năng hóa thành khói đen và tung ra những nhát chém vô hình xé toạc không gian."
+    },
+    {
+        title: "Thầy gọi hồn (Necromancer)",
+        category: "character",
+        content: "Những tà vật chuyên sử dụng ma pháp bóng tối để triệu hồi và điều khiển xác chết của binh lính vừa ngã xuống ngay trên chiến trường."
+    },
+    {
+        title: "Bộ giáp ám (Haunted Armor)",
+        category: "creature",
+        content: "Những bộ giáp trụ trống rỗng được thổi vào linh hồn tà ác, có khả năng kháng phép thuật cực tốt và sở hữu sức mạnh vật lý áp đảo."
+    },
+    {
+        title: "Thiên lộc",
+        category: "creature",
+        content: "Loài linh thú trắng muốt cực kỳ quý hiếm, có cặp sừng vươn cao như nhánh cây nở hoa đỏ và gắn lục lạc dưới cổ. Chúng sở hữu tốc độ phi thường và khả năng tạo lá chắn bảo vệ chủ nhân."
+    },
+    {
+        title: "Thần quang (Divine Light)",
+        category: "magic",
+        content: "Phép thuật ánh sáng tối thượng của Hoàng hậu Kaela, tạo ra cột sáng khổng lồ từ bầu trời để thiêu rụi hàng ngàn tà vật thành tro bụi trong tích tắc."
     }
 ];
+
+const CHAPTER_LORE_MAPPING = {
+    1: [0, 20, 27],  // Lục địa Nemarian, Dãy Kronos, Thần Navis
+    2: [25],         // Núi Morgard
+    3: [2, 29, 32],  // Thánh địa Midhelm, Thăng giáng bàn, Trường Miojin
+    4: [13, 26, 30], // Milenia, Hồ Nawa, Cầu nổi ma thuật
+    5: [3, 4, 28],   // Người Aniz, Thú Ấn, Huyết thệ
+    6: [17, 21],     // Thú Triều, Sông Narime
+    7: [15, 31],     // Cây Akkai, Cây Imoa
+    8: [38, 23],     // Thiên lộc, Kinh đô Aria
+    9: [16],         // Cây Aqua
+    10: [19],        // Amber
+    11: [10, 9, 37], // Sieth, Hồ Đen, Bộ giáp ám
+    12: [6, 7],      // Mạch ma pháp, Thuộc tính Trắng
+    13: [8, 24],     // Thất đại phong ấn, Đảo Quỷ
+    14: [35, 33],    // Tử thần, Kỵ sĩ bóng đêm
+    15: [11, 36],    // Hồn Ngọc, Thầy gọi hồn
+    16: [5, 1],      // Hóa thú toàn phần, Rừng Akine
+    17: [22, 34],    // Thành phố York, Người đá khổng lồ
+    18: [18],        // Lưu Ảnh Thạch
+    19: [39],        // Thần quang
+    20: [12, 33],    // Cốt Long, Kỵ sĩ bóng đêm
+    21: [0, 14]      // Lục địa Nemarian, Talia & Marcus
+};
 
 // Active state and displays mapping per chapter
 const CHAPTER_METADATA = {
@@ -623,9 +767,9 @@ function setActiveChapter(id, doScroll = true) {
         if (mapMarker) mapMarker.style.opacity = '0';
     }
 
-    // Update Facts widget on chapter switch immediately (excluding initial load sequence)
-    if (typeof nextFact === 'function' && factTimer) {
-        nextFact();
+    // Đồng bộ cổ thư Nemarian theo bối cảnh chương đọc của độc giả
+    if (typeof syncLoreWithChapter === 'function') {
+        syncLoreWithChapter(id);
     }
 
     // TOC Active indicators syncing
@@ -2182,18 +2326,23 @@ function endMapTouch(e) {
 // NEMARIAN MYSTERIES & FACTS ROTATOR ENGINE
 // ==========================================================================
 
+let currentCategory = 'all';
+let filteredFacts = [...NEMARIAN_FACTS];
 let currentFactIndex = 0;
 let factTimer = null;
 
 function initFactsWidget() {
-    // Select a random starting fact
-    currentFactIndex = Math.floor(Math.random() * NEMARIAN_FACTS.length);
-    displayFact(currentFactIndex);
+    // Khởi tạo chỉ số bí mật ngẫu nhiên
+    currentCategory = 'all';
+    filteredFacts = [...NEMARIAN_FACTS];
+    currentFactIndex = Math.floor(Math.random() * filteredFacts.length);
+    displayFact(currentFactIndex, false); // Không phun sao lúc mới tải trang
     resetFactTimer();
 }
 
-function displayFact(index) {
-    if (index < 0 || index >= NEMARIAN_FACTS.length) return;
+function displayFact(index, triggerSparks = true) {
+    if (filteredFacts.length === 0) return;
+    if (index < 0 || index >= filteredFacts.length) index = 0;
     currentFactIndex = index;
     
     const container = document.querySelector('.lore-scroll-container');
@@ -2201,28 +2350,94 @@ function displayFact(index) {
     const contentEl = document.getElementById('lore-text-content');
     const regionEl = document.getElementById('lore-region');
     const widgetHeaderTitle = document.getElementById('crystal-title');
+    const pageIndicatorEl = document.getElementById('lore-page-indicator');
     
     if (!container || !contentEl || !regionEl) return;
     
-    // Add fade-out class for transition
-    container.classList.add('fade-out');
+    // Kích hoạt hiệu ứng lật trang 3D tinh tế
+    container.classList.add('page-flip-active');
     
+    // Tại đỉnh điểm của hoạt ảnh xoay 3D (khi thẻ bị quay đi 90 độ và ẩn)
     setTimeout(() => {
-        // Update content
-        const fact = NEMARIAN_FACTS[index];
-        if (widgetHeaderTitle) widgetHeaderTitle.textContent = "📜 Bí Thư Nemarian";
-        if (regionEl) regionEl.textContent = `Bí thư ${index + 1} / ${NEMARIAN_FACTS.length}`;
+        const fact = filteredFacts[index];
+        const absoluteIndex = NEMARIAN_FACTS.indexOf(fact);
+        
+        if (widgetHeaderTitle) widgetHeaderTitle.textContent = "📜 Cổ Thư Nemarian";
+        if (regionEl) regionEl.textContent = `Bí thư ${absoluteIndex + 1} / ${NEMARIAN_FACTS.length}`;
         if (titleEl) titleEl.textContent = fact.title;
         if (contentEl) contentEl.textContent = fact.content;
+        if (pageIndicatorEl) pageIndicatorEl.textContent = `[ Cổ thư ${index + 1} / ${filteredFacts.length} ]`;
         
-        // Fade back in
-        container.classList.remove('fade-out');
-    }, 300); // matches 300ms CSS transition duration
+        // Phun một chòm sao lấp lánh (bụi trăng) quanh khu vực Bí thư ở lề phải để ăn mừng khám phá
+        if (triggerSparks && particlesEnabled && particles.length > 0) {
+            for (let i = 0; i < 9; i++) {
+                let spark = new Particle('moonlight_dust');
+                spark.x = canvasWidth - 280 + Math.random() * 240;
+                spark.y = 180 + Math.random() * 240;
+                spark.speedX = Math.random() * 1.6 - 0.8;
+                spark.speedY = Math.random() * 1.6 - 0.8;
+                spark.maxAlpha = Math.random() * 0.75 + 0.25;
+                spark.alpha = spark.maxAlpha;
+                particles.push(spark);
+            }
+        }
+    }, 250); // Ở giữa chu kỳ lật 3D 500ms
+    
+    // Gỡ bỏ class hiệu ứng sau khi hoàn tất lật trang
+    setTimeout(() => {
+        container.classList.remove('page-flip-active');
+    }, 500);
 }
 
 function nextFact() {
-    const nextIdx = (currentFactIndex + 1) % NEMARIAN_FACTS.length;
-    displayFact(nextIdx);
+    if (filteredFacts.length === 0) return;
+    const nextIdx = (currentFactIndex + 1) % filteredFacts.length;
+    displayFact(nextIdx, true);
+    resetFactTimer();
+}
+
+function prevFact() {
+    if (filteredFacts.length === 0) return;
+    const prevIdx = (currentFactIndex - 1 + filteredFacts.length) % filteredFacts.length;
+    displayFact(prevIdx, true);
+    resetFactTimer();
+}
+
+function filterLoreCategory(category) {
+    // Cập nhật lớp active của các Tab nút bấm lọc
+    document.querySelectorAll('.lore-tab-btn').forEach(btn => btn.classList.remove('active'));
+    
+    let activeBtn = document.getElementById(`lore-tab-${category}`);
+    if (activeBtn) activeBtn.classList.add('active');
+    
+    currentCategory = category;
+    
+    if (category === 'all') {
+        filteredFacts = [...NEMARIAN_FACTS];
+    } else {
+        filteredFacts = NEMARIAN_FACTS.filter(f => f.category === category);
+    }
+    
+    currentFactIndex = 0;
+    displayFact(0, true);
+    resetFactTimer();
+}
+
+function syncLoreWithChapter(chapterId) {
+    if (!CHAPTER_LORE_MAPPING[chapterId]) return;
+    
+    // Tự động khôi phục về tab "Tất cả" khi đồng bộ bối cảnh chương mới
+    document.querySelectorAll('.lore-tab-btn').forEach(btn => btn.classList.remove('active'));
+    let allBtn = document.getElementById('lore-tab-all');
+    if (allBtn) allBtn.classList.add('active');
+    
+    currentCategory = 'all';
+    filteredFacts = [...NEMARIAN_FACTS];
+    
+    const absoluteIndex = CHAPTER_LORE_MAPPING[chapterId][0];
+    currentFactIndex = absoluteIndex;
+    
+    displayFact(absoluteIndex, true);
     resetFactTimer();
 }
 
@@ -2232,7 +2447,7 @@ function resetFactTimer() {
     }
     factTimer = setInterval(() => {
         nextFact();
-    }, 25000); // Rotate every 25 seconds
+    }, 28000); // Xoay tự động mỗi 28 giây
 }
 
 function setupMapModalListeners() {
