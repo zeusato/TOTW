@@ -673,9 +673,7 @@ function cycleTtsSpeed() {
 
 // Helper to chunk text into smaller fragments (under 180 characters) for cloud TTS compatibility
 function chunkText(text, maxLength = 180) {
-    // 1. Preprocess text to replace mid-sentence dashes with a period for a full narrative breathing pause (equivalent to a period pause)
-    const processedText = text.trim()
-        .replace(/(?<!^)(?:\s+[-—–]\s*|\s*[-—–]\s+)/g, '. ');
+    const processedText = text.trim();
     
     const sentences = [];
     // 2. Split into sentences based on punctuation (. ! ?)
@@ -1116,9 +1114,7 @@ function readNextParagraph() {
 
     if (ttsType === 'local') {
         // --- LOCAL SPEECH SYNTHESIS ENGINE ---
-        // Preprocess text to replace mid-sentence dashes with a period for a full narrative breathing pause (equivalent to a period pause)
-        const preprocessedText = pText.trim()
-            .replace(/(?<!^)(?:\s+[-—–]\s*|\s*[-—–]\s+)/g, '. ');
+        const preprocessedText = pText.trim();
             
         ttsUtterance = new SpeechSynthesisUtterance(preprocessedText);
         
