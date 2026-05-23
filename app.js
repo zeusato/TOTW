@@ -164,18 +164,27 @@ const THEME_PARTICLES = {
     earth: { color: ['#d97706', '#84cc16', '#78350f'], count: 52, speed: 0.07 }
 };
 
-const REGION_NAMES = {
-    akine: "Cấm Địa Rừng Cổ Akine",
-    morgard: "Sườn Núi Lửa Morgard",
-    aria: "Kinh Đô Hoàng Gia Aria",
-    york: "Thương Cảng Sầm Uất York"
-};
-
-const REGION_COORDINATES = {
-    akine: { x: 48, y: 35 },
-    morgard: { x: 38, y: 22 },
-    aria: { x: 55, y: 56 },
-    york: { x: 65, y: 76 }
+const CHAPTER_LOCATIONS = {
+    1: { name: "Núi Morgard (Đỉnh Đinh Ba)", x: 72, y: 6 },
+    2: { name: "Hang Rồng Rakan (Núi Morgard)", x: 67, y: 17 },
+    3: { name: "Núi Ignir (Định Thiêng)", x: 62, y: 25 },
+    4: { name: "Hồ Nawa (Gương Soi Vĩnh Cửu)", x: 62, y: 38 },
+    5: { name: "Thung lũng Làng Tunggal", x: 45, y: 28 },
+    6: { name: "Quảng trường Làng Tunggal", x: 49, y: 31 },
+    7: { name: "Ngã Ba Suối (Bìa Rừng)", x: 58, y: 56 },
+    8: { name: "Thánh Địa Midhelm (Làng Nagiri)", x: 62, y: 62 },
+    9: { name: "Làng Blomine (Núi Bloodmoon)", x: 62, y: 76 },
+    10: { name: "Đầm suối Làng Tunggal", x: 43, y: 33 },
+    11: { name: "Tiểu Đảo giữa Hồ Đen", x: 85, y: 33 },
+    12: { name: "Sườn Núi Sau Làng Tunggal", x: 47, y: 39 },
+    13: { name: "Trại Liên Quân Ven Hồ Đen", x: 76, y: 35 },
+    14: { name: "Trại Hậu Cần Rừng Akine", x: 69, y: 32 },
+    15: { name: "Tế Đàn Bờ Hồ Đen", x: 88, y: 38 },
+    16: { name: "Hồ Thần Thụ Cây Akkai", x: 41, y: 40 },
+    17: { name: "Chiến Trường Lòng Chảo Hồ Đen", x: 80, y: 41 },
+    18: { name: "Ký ức Hồ Đen (Ngôi Nhà Đá)", x: 89, y: 30 },
+    19: { name: "Gò Đất Cao Ven Hồ Đen", x: 39, y: 32 },
+    20: { name: "Vách Núi Nam Hồ Đen (Cốt Long)", x: 85, y: 47 }
 };
 
 // ==========================================================================
@@ -518,21 +527,23 @@ function setActiveChapter(id, doScroll = true) {
     document.body.className = `theme-${meta.theme}`;
     selectedTheme = meta.theme;
 
-    // Highlight map region overview banner
+    // Highlight map region overview banner and glow marker coordinates dynamically
     const banner = document.getElementById('map-active-region');
-    if (banner && REGION_NAMES[meta.mapGlow]) {
-        banner.innerHTML = `📍 Lãnh địa: ${REGION_NAMES[meta.mapGlow]}`;
-    }
-
-    // Update map glow marker coordinates dynamically
     const mapMarker = document.getElementById('map-glow-marker');
-    if (mapMarker && meta.mapGlow && REGION_COORDINATES[meta.mapGlow]) {
-        const coords = REGION_COORDINATES[meta.mapGlow];
-        mapMarker.style.left = `${coords.x}%`;
-        mapMarker.style.top = `${coords.y}%`;
-        mapMarker.style.opacity = '1';
-    } else if (mapMarker) {
-        mapMarker.style.opacity = '0';
+    
+    if (CHAPTER_LOCATIONS[id]) {
+        const loc = CHAPTER_LOCATIONS[id];
+        if (banner) {
+            banner.innerHTML = `📍 Lãnh địa: ${loc.name}`;
+        }
+        if (mapMarker) {
+            mapMarker.style.left = `${loc.x}%`;
+            mapMarker.style.top = `${loc.y}%`;
+            mapMarker.style.opacity = '1';
+        }
+    } else {
+        if (banner) banner.innerHTML = `📍 Lãnh địa: Lục địa Nemarian`;
+        if (mapMarker) mapMarker.style.opacity = '0';
     }
 
     // Update Facts widget on chapter switch immediately (excluding initial load sequence)
