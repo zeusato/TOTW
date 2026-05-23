@@ -402,6 +402,7 @@ body.landing-active {
     cursor: pointer;
     user-select: none;
     transition: transform 0.3s;
+    white-space: nowrap;
 }
 
 .branding:hover {
@@ -432,6 +433,7 @@ body.landing-active {
     transition: all 0.3s;
     font-family: var(--font-sans);
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .control-btn:hover {
@@ -1866,4 +1868,64 @@ body.focus-active .control-bar:hover .controls-group > * {
     color: #ffffff !important;
     border-color: var(--theme-accent) !important;
     box-shadow: 0 0 15px rgba(251, 191, 36, 0.5) !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE HEADER OPTIMIZATIONS
+   ========================================================================== */
+
+/* Khi màn hình ở mức laptop trung bình/nhỏ (1280px trở xuống) hoặc khi cột đọc bị hẹp */
+@media (max-width: 1280px) {
+    .control-bar {
+        padding: 0.8rem 1.5rem !important; /* Thu nhỏ padding xung quanh header */
+    }
+    .branding {
+        font-size: 1.15rem !important; /* Giảm nhẹ size logo */
+    }
+    .control-btn {
+        padding: 0.5rem 0.85rem !important; /* Rút gọn khoảng cách trong nút */
+        font-size: 0.8rem !important;
+        gap: 0.35rem !important;
+    }
+    .controls-group {
+        gap: 0.5rem !important; /* Thu hẹp khoảng cách giữa các nút */
+    }
+}
+
+/* Khi màn hình nhỏ hơn 1080px (nơi khoảng trống bị thu hẹp đáng kể) */
+@media (max-width: 1080px) {
+    .control-bar .btn-text {
+        display: none !important; /* Ẩn toàn bộ văn bản trong nút, chỉ giữ lại icon */
+    }
+    .control-btn {
+        width: 38px !important;
+        height: 38px !important;
+        padding: 0 !important;
+        justify-content: center !important;
+        border-radius: 50% !important; /* Biến nút thành hình tròn tinh tế */
+    }
+    .audio-wave {
+        display: none !important; /* Ẩn equalizer trong nút nhạc để tránh lộn xộn, chỉ chừa icon */
+    }
+    .branding {
+        font-size: 1.1rem !important;
+    }
+}
+
+/* Khi màn hình điện thoại di động cực nhỏ (640px trở xuống) */
+@media (max-width: 640px) {
+    .control-bar {
+        padding: 0.75rem 1rem !important;
+    }
+    .branding {
+        font-size: 1rem !important;
+        letter-spacing: 0.04em !important;
+    }
+    .controls-group {
+        gap: 0.35rem !important;
+    }
+    .control-btn {
+        width: 32px !important;
+        height: 32px !important;
+    }
 }
