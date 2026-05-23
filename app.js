@@ -172,7 +172,7 @@ const CHAPTER_LOCATIONS = {
     5: { name: "Thung lũng Làng Tunggal", x: 45, y: 28 },
     6: { name: "Quảng trường Làng Tunggal", x: 49, y: 31 },
     7: { name: "Ngã Ba Suối (Bìa Rừng)", x: 58, y: 56 },
-    8: { name: "Thánh Địa Midhelm (Làng Nagiri)", x: 62, y: 62 },
+    8: { name: "Thánh Địa Midhelm (Làng Nagiri)", x: 62, y: 76 },
     9: { name: "Làng Blomine (Núi Bloodmoon)", x: 62, y: 76 },
     10: { name: "Đầm suối Làng Tunggal", x: 43, y: 33 },
     11: { name: "Tiểu Đảo giữa Hồ Đen", x: 85, y: 33 },
@@ -183,7 +183,7 @@ const CHAPTER_LOCATIONS = {
     16: { name: "Hồ Thần Thụ Cây Akkai", x: 41, y: 40 },
     17: { name: "Chiến Trường Lòng Chảo Hồ Đen", x: 80, y: 41 },
     18: { name: "Ký ức Hồ Đen (Ngôi Nhà Đá)", x: 89, y: 30 },
-    19: { name: "Gò Đất Cao Ven Hồ Đen", x: 39, y: 32 },
+    19: { name: "Gò Đất Cao Ven Hồ Đen", x: 41, y: 40 },
     20: { name: "Vách Núi Nam Hồ Đen (Cốt Long)", x: 85, y: 47 }
 };
 
