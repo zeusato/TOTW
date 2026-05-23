@@ -287,7 +287,7 @@ body.landing-active {
     justify-content: center;
     align-items: center;
     width: fit-content;
-    margin: 0 auto;
+    margin: 0;
 }
 
 .enter-btn {
@@ -1834,15 +1834,8 @@ body.focus-active .interaction-column {
     transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 
-body.focus-active #main-workspace {
-    display: block !important; /* Đổi sang block để dễ căn chỉnh */
-    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-}
-
 body.focus-active .reader-column {
     width: 100% !important;
-    max-width: 780px !important;
-    margin: 0 auto !important;
     border-right: none !important;
     padding-left: 2rem !important;
     padding-right: 2rem !important;
