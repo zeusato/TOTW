@@ -167,7 +167,7 @@ const THEME_PARTICLES = {
 const CHAPTER_LOCATIONS = {
     1: { name: "Núi Morgard (Đỉnh Đinh Ba)", x: 72, y: 6 },
     2: { name: "Hang Rồng Rakan (Núi Morgard)", x: 67, y: 17 },
-    3: { name: "Núi Ignir (Định Thiêng)", x: 62, y: 25 },
+    3: { name: "Núi Ignir (Đỉnh Thiêng)", x: 62, y: 25 },
     4: { name: "Hồ Nawa (Gương Soi Vĩnh Cửu)", x: 62, y: 38 },
     5: { name: "Thung lũng Làng Tunggal", x: 45, y: 28 },
     6: { name: "Quảng trường Làng Tunggal", x: 49, y: 31 },
@@ -182,8 +182,8 @@ const CHAPTER_LOCATIONS = {
     15: { name: "Tế Đàn Bờ Hồ Đen", x: 88, y: 38 },
     16: { name: "Hồ Thần Thụ Cây Akkai", x: 41, y: 40 },
     17: { name: "Chiến Trường Lòng Chảo Hồ Đen", x: 80, y: 41 },
-    18: { name: "Ký ức Hồ Đen (Ngôi Nhà Đá)", x: 89, y: 30 },
-    19: { name: "Gò Đất Cao Ven Hồ Đen", x: 41, y: 40 },
+    18: { name: "Hồ Đen", x: 89, y: 30 },
+    19: { name: "Gò Đất Cao Ven Hồ Đen", x: 79, y: 40 },
     20: { name: "Vách Núi Nam Hồ Đen (Cốt Long)", x: 85, y: 47 }
 };
 
