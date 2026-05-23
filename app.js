@@ -695,6 +695,8 @@ function playGoogleTtsQueue(chunks, onEnd, onError) {
     
     audioQueue = chunks;
     currentQueueIndex = 0;
+    let retryCount = 0;
+    const maxRetries = 2;
     
     function playNext() {
         if (!isTtsActive) return;
@@ -726,6 +728,7 @@ function playGoogleTtsQueue(chunks, onEnd, onError) {
         });
         
         ttsAudioElement.addEventListener('ended', () => {
+            retryCount = 0; // Reset retry count on success
             // Introduce breathing delay based on active speed level configuration
             ttsQueueTimeout = setTimeout(() => {
                 if (isTtsActive) {
@@ -737,12 +740,24 @@ function playGoogleTtsQueue(chunks, onEnd, onError) {
         
         ttsAudioElement.addEventListener('error', (e) => {
             console.error("Google TTS error:", e);
-            onError();
+            if (retryCount < maxRetries) {
+                retryCount++;
+                console.log(`Retrying chunk ${currentQueueIndex} (Attempt ${retryCount}/${maxRetries})...`);
+                ttsQueueTimeout = setTimeout(playNext, 1000); // Wait 1s before retrying
+            } else {
+                onError();
+            }
         });
         
         ttsAudioElement.play().catch(err => {
             console.warn("Audio play blocked or failed:", err);
-            onError();
+            if (retryCount < maxRetries) {
+                retryCount++;
+                console.log(`Retrying play chunk ${currentQueueIndex} (Attempt ${retryCount}/${maxRetries})...`);
+                ttsQueueTimeout = setTimeout(playNext, 1000);
+            } else {
+                onError();
+            }
         });
     }
     
@@ -750,6 +765,7 @@ function playGoogleTtsQueue(chunks, onEnd, onError) {
 }
 
 
+let voiceAttempts = 0;
 function initVoices() {
     const voiceSelect = document.getElementById('tts-voice-select');
     const ttsBtn = document.getElementById('tts-btn');
@@ -767,6 +783,14 @@ function initVoices() {
     }
     
     ttsVoices = window.speechSynthesis.getVoices();
+    
+    // Async loading of voices on some devices (e.g. Chrome, Android, iOS Safari)
+    if (ttsVoices.length === 0 && voiceAttempts < 10) {
+        voiceAttempts++;
+        setTimeout(initVoices, 250);
+        return;
+    }
+    
     voiceSelect.innerHTML = '';
 
     const viVoices = ttsVoices.filter(v => {
@@ -1104,7 +1128,11 @@ function readNextParagraph() {
                 readNextParagraph();
             }
         }, () => {
-            showToast("Thiết bị không hỗ trợ Tiếng Việt offline và dịch vụ giọng đọc đám mây gặp sự cố!", "🛡️");
+            if (!navigator.onLine) {
+                showToast("Không có kết nối mạng! Vui lòng kiểm tra internet để tiếp tục sử dụng giọng đọc đám mây.", "📶");
+            } else {
+                showToast("Dịch vụ đọc cloud hiện không khả dụng (quá tải hoặc bị chặn). Vui lòng thử lại sau!", "🛡️");
+            }
             stopTTS();
         });
     }
