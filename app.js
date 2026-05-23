@@ -716,7 +716,9 @@ function playGoogleTtsQueue(chunks, onEnd, onError) {
             ttsQueueTimeout = null;
         }
         
-        ttsAudioElement = new Audio(url);
+        ttsAudioElement = document.createElement('audio');
+        ttsAudioElement.referrerPolicy = "no-referrer";
+        ttsAudioElement.src = url;
         
         // Calibrate playback speed dynamically based on active speed level configuration
         const speedCfg = TTS_SPEEDS[currentTtsSpeedIdx];
