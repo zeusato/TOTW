@@ -694,15 +694,22 @@ body.landing-active {
 
 .chapter-container {
     display: none;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .chapter-container.active-chapter {
     display: block;
-    opacity: 1;
-    transform: translateY(0);
+    animation: chapterFadeIn 0.8s cubic-bezier(0.25, 1, 0.3, 1) forwards;
+}
+
+@keyframes chapterFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .chapter-header {
@@ -1838,18 +1845,6 @@ body.landing-active {
     color: var(--theme-accent) !important; /* Dùng màu accent nổi bật */
     text-shadow: 0 0 12px rgba(var(--theme-primary-rgb), 0.4), 2px 2px 0px rgba(0, 0, 0, 0.4) !important;
     transition: color 0.5s ease, text-shadow 0.5s ease !important;
-}
-
-/* 2. Hiệu ứng chuyển chương mượt mà (Fade and Slide Up) */
-.chapter-container {
-    opacity: 0;
-    transform: translateY(15px);
-    transition: opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.chapter-container.active-chapter {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 /* Chế độ tập trung chỉ ẩn cột bên phải, KHÔNG thay đổi thanh header */
